@@ -1,0 +1,19 @@
+playButton.png
+size: 152, 317
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+playNorm
+  rotate: false
+  xy: 0, 0
+  size: 152, 164
+  orig: 152, 164
+  offset: 0, 0
+  index: -1
+playPushed
+  rotate: false
+  xy: 0, 164
+  size: 152, 153
+  orig: 152, 153
+  offset: 0, 0
+  index: -1
