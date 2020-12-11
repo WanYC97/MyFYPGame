@@ -11,10 +11,8 @@ public class StepCounter implements StepCounterInterface {
         stepCounterApi = new StepCounterApi();
     }
 
-
     public int getStepCount() {
-        System.out.println("WTF");
-        System.out.println("This is how much" + stepCounterApi.getStepCount());
+        System.out.println("get step count called");
         CURRENT_STEP_COUNT = stepCounterApi.getStepCount();
         return CURRENT_STEP_COUNT;
     }

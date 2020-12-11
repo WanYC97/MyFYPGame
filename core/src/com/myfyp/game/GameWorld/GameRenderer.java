@@ -83,11 +83,11 @@ public class GameRenderer {
         stage = new Stage(viewport);
         imageInit();
         STEP_COUNT = countStep();
-        //STEP_COUNT_STRING = STEP_COUNT.;
 
         placeArrow(a_left, a_right, ball, imagePet);
         drawPet(imagePet);
         addStepCount();
+
 
         Gdx.input.setInputProcessor(stage);
         batcher = new SpriteBatch();
@@ -99,7 +99,6 @@ public class GameRenderer {
     }
 
     private int countStep(){
-        System.out.println("This is the Step Count" + stepCounter.getStepCount());
         return stepCounter.getStepCount();
     }
 
@@ -211,8 +210,9 @@ public class GameRenderer {
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.1f,0.1f);
         screenNumber.draw(batcher, Integer.toString(STEP_COUNT), gameWidth >> 1, gameHeight -2);
+        STEP_COUNT = countStep();
         batcher.end();
-
+        System.out.println(STEP_COUNT);
         stage.act();
         stage.draw();
     }
