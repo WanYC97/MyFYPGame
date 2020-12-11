@@ -5,13 +5,14 @@ import com.badlogic.gdx.Screen;
 import com.myfyp.game.GameWorld.GameRenderer;
 import com.myfyp.game.GameWorld.GameRendererRun;
 import com.myfyp.game.GameWorld.GameWorld;
+import com.myfyp.game.helper.StepCounterInterface;
 
 public class GameScreenRun implements Screen {
     GameWorld world;
     GameRendererRun rendererRun;
     int runTime;
 
-    public GameScreenRun(Game game){
+    public GameScreenRun(Game game, StepCounterInterface stepCounter){
 
         //Info about the screen size
         float screenWidth = Gdx.graphics.getWidth();
@@ -26,7 +27,7 @@ public class GameScreenRun implements Screen {
         int midPointY = (int) (gameHeightF / 2);
 
         world = new GameWorld(gameWidth, gameHeight, midPointY);
-        rendererRun = new GameRendererRun(world, gameWidth, gameHeight, midPointY, game);
+        rendererRun = new GameRendererRun(world, gameWidth, gameHeight, midPointY, game, stepCounter);
 
     }
 

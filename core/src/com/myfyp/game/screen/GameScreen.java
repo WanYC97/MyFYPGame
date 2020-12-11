@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.myfyp.game.GameWorld.GameRenderer;
 import com.myfyp.game.GameWorld.GameWorld;
 import com.myfyp.game.MyFypGame;
+import com.myfyp.game.helper.StepCounterInterface;
 
 import GameObjects.Pet;
 
@@ -18,9 +19,11 @@ public class GameScreen implements Screen {
     GameRenderer renderer;
     int runTime;
     private Game game;
+    StepCounterInterface stepCounter;
 
-    public GameScreen(Game game){
+    public GameScreen(Game game, StepCounterInterface stepCounter){
         this.game = game;
+        this.stepCounter = stepCounter;
         //Info about the screen size
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
@@ -34,7 +37,7 @@ public class GameScreen implements Screen {
         int midPointY = (int) (gameHeightF / 2);
 
         world = new GameWorld(gameWidth, gameHeight, midPointY);
-        renderer = new GameRenderer(world, gameWidth, gameHeight, midPointY, game);
+        renderer = new GameRenderer(world, gameWidth, gameHeight, midPointY, game, stepCounter);
 
     }
 

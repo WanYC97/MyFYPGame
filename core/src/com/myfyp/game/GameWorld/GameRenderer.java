@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myfyp.game.helper.AssetLoader;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
+import com.myfyp.game.helper.StepCounterInterface;
 import com.myfyp.game.screen.GameScreenRun;
 
 import GameObjects.ArrowLeft;
@@ -46,6 +47,10 @@ public class GameRenderer {
     private Viewport viewport;
     private Game game;
 
+    private StepCounterInterface stepCounter;
+    private int STEP_COUNT;
+    //private String STEP_COUNT_STRING;
+
     //Game Object
     private Pet pet;
     private Toy toy;
@@ -60,12 +65,13 @@ public class GameRenderer {
 
     public Image imagePet, ball, a_left, a_right;
 
-    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, int midPointY, Game game) {
+    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, int midPointY, Game game, StepCounterInterface stepCounter) {
         this.world = world;
         this.midPointY = midPointY;
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.game = game;
+        this.stepCounter = stepCounter;
 
         gameObjectsInit();
         AssetLoader.load();
@@ -76,9 +82,12 @@ public class GameRenderer {
         viewport = new FitViewport(gameWidth, gameHeight, camera);
         stage = new Stage(viewport);
         imageInit();
+        STEP_COUNT = countStep();
+        //STEP_COUNT_STRING = STEP_COUNT.;
 
         placeArrow(a_left, a_right, ball, imagePet);
         drawPet(imagePet);
+        addStepCount();
 
         Gdx.input.setInputProcessor(stage);
         batcher = new SpriteBatch();
@@ -88,6 +97,16 @@ public class GameRenderer {
         batcher.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
     }
+
+    private int countStep(){
+        System.out.println("This is the Step Count" + stepCounter.getStepCount());
+        return stepCounter.getStepCount();
+    }
+
+    private void addStepCount(){
+        screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
+    }
+
 
     private void placeArrow(Image arrowLeftImage, Image arrowRightImage, final Image toy1, final Image imagePet){
         arrowLeftImage.setPosition( arrowLeft.getX(), arrowLeft.getY());
@@ -145,7 +164,7 @@ public class GameRenderer {
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                 getActor().setColor(Color.WHITE);
                 System.out.println("Dropped");
-                game.setScreen(new GameScreenRun(game));
+                game.setScreen(new GameScreenRun(game, stepCounter));
                 ball.remove();
             }
         });
@@ -189,6 +208,9 @@ public class GameRenderer {
         shapeRenderer.end();
 
         batcher.begin();
+        screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        screenNumber.getData().setScale(0.1f,0.1f);
+        screenNumber.draw(batcher, Integer.toString(STEP_COUNT), gameWidth >> 1, gameHeight -2);
         batcher.end();
 
         stage.act();

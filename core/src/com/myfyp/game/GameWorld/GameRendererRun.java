@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myfyp.game.helper.AssetLoader;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
+import com.myfyp.game.helper.StepCounterInterface;
 import com.myfyp.game.screen.GameScreen;
 import com.myfyp.game.screen.GameScreenRun;
 
@@ -50,6 +51,8 @@ public class GameRendererRun {
     private Viewport viewport;
     private Game game;
 
+    private StepCounterInterface stepCounter;
+
     //Game Object
     private Pet pet;
     private Toy toy;
@@ -64,12 +67,13 @@ public class GameRendererRun {
 
     public Image imagePet, ball, a_left, a_right;
 
-    public GameRendererRun(GameWorld world, int gameWidth, int gameHeight, int midPointY, final Game game) {
+    public GameRendererRun(GameWorld world, int gameWidth, int gameHeight, int midPointY, final Game game, final StepCounterInterface stepCounter) {
         this.world = world;
         this.midPointY = midPointY;
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.game = game;
+        this.stepCounter = stepCounter;
 
         gameObjectsInit();
         AssetLoader.load();
@@ -94,7 +98,7 @@ public class GameRendererRun {
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen(game, stepCounter));
             }
         });
 
@@ -170,7 +174,7 @@ public class GameRendererRun {
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                 getActor().setColor(Color.WHITE);
                 System.out.println("Dropped");
-                game.setScreen(new GameScreenRun(game));
+                game.setScreen(new GameScreenRun(game, stepCounter));
                 ball.remove();
             }
         });

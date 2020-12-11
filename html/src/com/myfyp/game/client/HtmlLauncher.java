@@ -10,13 +10,13 @@ public class HtmlLauncher extends GwtApplication {
         @Override
         public GwtApplicationConfiguration getConfig () {
                 // Resizable application, uses available space in browser
-                return new GwtApplicationConfiguration(true);
+                //return new GwtApplicationConfiguration(new StepCounterHTML(), true);
                 // Fixed size application:
-                //return new GwtApplicationConfiguration(480, 320);
+                return new GwtApplicationConfiguration(480, 320);
         }
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new MyFypGame();
+                return new MyFypGame(new StepCounterHTML());
         }
 }

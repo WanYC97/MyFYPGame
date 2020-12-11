@@ -9,6 +9,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 600;
 		config.height = 800;
-		new LwjglApplication(new MyFypGame(), config);
+		new LwjglApplication(new MyFypGame(new StepCounterDesktop()), config);
 	}
 }
