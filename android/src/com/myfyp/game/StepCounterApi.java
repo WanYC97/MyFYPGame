@@ -13,7 +13,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 public class StepCounterApi extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor sensor;
-    int stepCount;
+    float stepCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,8 @@ public class StepCounterApi extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         System.out.println("ONSENSORCHANGED TRIGGERED");
-        stepCount = (int)event.values[0];
+        stepCount = event.values[0];
+        System.out.println("event.values[0] is " + event.values[0]);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class StepCounterApi extends Activity implements SensorEventListener {
         mSensorManager.unregisterListener(this, sensor);
     }
 
-    public int getStepCount() {
+    public float getStepCount() {
         return stepCount;
     }
 }

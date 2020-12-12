@@ -48,7 +48,7 @@ public class GameRenderer {
     private Game game;
 
     private StepCounterInterface stepCounter;
-    private int STEP_COUNT;
+    private float STEP_COUNT;
     //private String STEP_COUNT_STRING;
 
     //Game Object
@@ -98,7 +98,7 @@ public class GameRenderer {
         shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
-    private int countStep(){
+    private float countStep(){
         return stepCounter.getStepCount();
     }
 
@@ -209,7 +209,7 @@ public class GameRenderer {
         batcher.begin();
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.1f,0.1f);
-        screenNumber.draw(batcher, Integer.toString(STEP_COUNT), gameWidth >> 1, gameHeight -2);
+        screenNumber.draw(batcher, Float.toString(STEP_COUNT), gameWidth >> 1, gameHeight -2);
         STEP_COUNT = countStep();
         batcher.end();
         System.out.println(STEP_COUNT);
