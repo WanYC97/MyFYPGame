@@ -46,8 +46,9 @@ public class GameRenderer {
     private Toy toy;
     private ArrowLeft arrowLeft;
     private ArrowRight arrowRight;
-
     public Image imagePet, ball, a_left, a_right;
+
+    //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
 
     public GameRenderer(GameWorld world, int gameWidth, int gameHeight, Game game, StepCounterInterface stepCounter, OrthographicCamera camera, Viewport viewport, Stage stage) {
@@ -59,7 +60,6 @@ public class GameRenderer {
         this.camera = camera;
         this.viewport = viewport;
         this.stage = stage;
-        //Set main screen as FIRST_SCREEN
 
         gameObjectsInit();
         assetsInit();
