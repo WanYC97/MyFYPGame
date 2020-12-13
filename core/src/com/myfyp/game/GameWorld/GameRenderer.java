@@ -5,19 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myfyp.game.helper.AssetLoader;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
@@ -32,24 +27,19 @@ import GameObjects.Toy;
 
 public class GameRenderer {
 
-    private ImageButton play;
-    private Table table;
-    private int midPointY;
     private int gameWidth;
     private int gameHeight;
     private SpriteBatch batcher;
     private BitmapFont screenNumber;
     private GameWorld world;
-    private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
-    private Skin skin;
+    private Game game;
+    private OrthographicCamera camera;
     private Stage stage;
     private Viewport viewport;
-    private Game game;
 
     private StepCounterInterface stepCounter;
     private float STEP_COUNT;
-    //private String STEP_COUNT_STRING;
 
     //Game Object
     private Pet pet;
@@ -57,43 +47,33 @@ public class GameRenderer {
     private ArrowLeft arrowLeft;
     private ArrowRight arrowRight;
 
-    //Assets
-    public static Texture shiba;
-    public static Texture arrowLeftTexture;
-    public static Texture arrowRightTexture;
-    public static Texture toy_ball;
-
     public Image imagePet, ball, a_left, a_right;
+    ScreenNo myVar = ScreenNo.FIRST_SCREEN;
 
-    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, int midPointY, Game game, StepCounterInterface stepCounter) {
+    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, Game game, StepCounterInterface stepCounter, OrthographicCamera camera, Viewport viewport, Stage stage) {
         this.world = world;
-        this.midPointY = midPointY;
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.game = game;
         this.stepCounter = stepCounter;
+        this.camera = camera;
+        this.viewport = viewport;
+        this.stage = stage;
+        //Set main screen as FIRST_SCREEN
 
         gameObjectsInit();
-        AssetLoader.load();
         assetsInit();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, gameWidth, gameHeight);
-        camera.update();
-        viewport = new FitViewport(gameWidth, gameHeight, camera);
-        stage = new Stage(viewport);
-        imageInit();
+
         STEP_COUNT = countStep();
 
         placeArrow(a_left, a_right, ball, imagePet);
         drawPet(imagePet);
         addStepCount();
-
-
         Gdx.input.setInputProcessor(stage);
+
         batcher = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
-        assetsInit();
         batcher.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
     }
@@ -106,8 +86,7 @@ public class GameRenderer {
         screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
     }
 
-
-    private void placeArrow(Image arrowLeftImage, Image arrowRightImage, final Image toy1, final Image imagePet){
+    private void placeArrow(Image arrowLeftImage, Image arrowRightImage, final Image toy, final Image imagePet){
         arrowLeftImage.setPosition( arrowLeft.getX(), arrowLeft.getY());
         arrowLeftImage.setWidth(arrowLeft.getWidth());
         arrowLeftImage.setHeight(arrowLeft.getHeight());
@@ -120,23 +99,43 @@ public class GameRenderer {
 
         arrowLeftImage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
+                if(myVar == ScreenNo.FIRST_SCREEN){
+                    //Go to left
+                }
+                else if(myVar == ScreenNo.SECOND_SCREEN){
+                    //Do nothing
+                }
+                else if(myVar == ScreenNo.THIRD_SCREEN){
+                    //return to first screen
+                }
                 System.out.println("Clicked 01");
 
             }
         });
+
         arrowRightImage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                addToys(toy1, imagePet);
+                if(myVar == ScreenNo.FIRST_SCREEN){
+                    secondScreen(toy);
+                }
+                else if(myVar == ScreenNo.SECOND_SCREEN){
+                    //return to first screen
+                }
+                else if(myVar == ScreenNo.THIRD_SCREEN){
+                    //Do nothing
+                }
                 System.out.println("Clicked 02");
             }
         });
     }
+    private void secondScreen(final Image toy){
+        toy.setPosition( this.toy.getX(), this.toy.getY());
+        toy.setSize(3, 3);
+        stage.addActor(toy);
+        ballDragAndDrop();
 
-    private void addToys(final Image ball, Image imagePet){
-        ball.setPosition( toy.getX(), toy.getY());
-        ball.setSize(3, 3);
-        stage.addActor(ball);
-
+    }
+    private void ballDragAndDrop(){
         DragAndDrop dragAndDrop = new DragAndDrop();
         dragAndDrop.addSource(new Source(ball) {
             public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -174,7 +173,6 @@ public class GameRenderer {
         imagePet.setWidth(pet.getWidth());
         imagePet.setHeight(pet.getHeight());
         stage.addActor(imagePet);
-        //batcher.draw(shiba, pet.getX(), pet.getY(), pet.getWidth(), pet.getHeight());
     }
 
     private void gameObjectsInit(){
@@ -185,18 +183,13 @@ public class GameRenderer {
     }
 
     private void assetsInit(){
-        shiba = AssetLoader.shiba;
-        arrowLeftTexture = AssetLoader.arrowLeft;
-        arrowRightTexture = AssetLoader.arrowRight;
-        toy_ball = AssetLoader.toy;
+        AssetLoader.load();
+        imagePet = new Image(AssetLoader.shiba);
+        ball = new Image(AssetLoader.toy);
+        a_left = new Image(AssetLoader.arrowLeft);
+        a_right = new Image(AssetLoader.arrowRight);
     }
 
-    private void imageInit(){
-        imagePet = new Image(shiba);
-        ball = new Image(toy_ball);
-        a_left = new Image(arrowLeftTexture);
-        a_right = new Image(arrowRightTexture);
-    }
     public void render(float runTime){
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -216,12 +209,11 @@ public class GameRenderer {
         stage.act();
         stage.draw();
     }
-    //NEED FIX
-    public void resize(int width, int height){
-        stage.getViewport().update(width, height, true);
-    }
-    public void dispose(){
-        AssetLoader.dispose();
-        stage.dispose();
+
+    //Determine the current screen
+    enum ScreenNo{
+        FIRST_SCREEN,
+        SECOND_SCREEN,
+        THIRD_SCREEN
     }
 }
