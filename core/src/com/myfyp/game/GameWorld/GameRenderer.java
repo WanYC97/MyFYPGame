@@ -51,6 +51,13 @@ public class GameRenderer {
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
 
+    //Determine the current screen
+    enum ScreenNo{
+        FIRST_SCREEN,
+        SECOND_SCREEN,
+        THIRD_SCREEN
+    }
+
     public GameRenderer(GameWorld world, int gameWidth, int gameHeight, Game game, StepCounterInterface stepCounter, OrthographicCamera camera, Viewport viewport, Stage stage) {
         this.world = world;
         this.gameWidth = gameWidth;
@@ -66,8 +73,8 @@ public class GameRenderer {
 
         STEP_COUNT = countStep();
 
-        placeArrow(a_left, a_right, ball, imagePet);
-        drawPet(imagePet);
+        placeArrow(a_left, a_right, ball);
+        placePet(imagePet);
         addStepCount();
         Gdx.input.setInputProcessor(stage);
 
@@ -86,7 +93,14 @@ public class GameRenderer {
         screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
     }
 
-    private void placeArrow(Image arrowLeftImage, Image arrowRightImage, final Image toy, final Image imagePet){
+    private void placePet(Image imagePet){
+        imagePet.setPosition( pet.getX(), pet.getY());
+        imagePet.setWidth(pet.getWidth());
+        imagePet.setHeight(pet.getHeight());
+        stage.addActor(imagePet);
+    }
+
+    private void placeArrow(Image arrowLeftImage, Image arrowRightImage, final Image toy){
         arrowLeftImage.setPosition( arrowLeft.getX(), arrowLeft.getY());
         arrowLeftImage.setWidth(arrowLeft.getWidth());
         arrowLeftImage.setHeight(arrowLeft.getHeight());
@@ -108,7 +122,7 @@ public class GameRenderer {
                 else if(myVar == ScreenNo.THIRD_SCREEN){
                     //return to first screen
                 }
-                System.out.println("Clicked 01");
+                System.out.println("Left button clicked");
 
             }
         });
@@ -116,7 +130,7 @@ public class GameRenderer {
         arrowRightImage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
-                    secondScreen(toy);
+                    playScreen(toy);
                 }
                 else if(myVar == ScreenNo.SECOND_SCREEN){
                     //return to first screen
@@ -124,17 +138,18 @@ public class GameRenderer {
                 else if(myVar == ScreenNo.THIRD_SCREEN){
                     //Do nothing
                 }
-                System.out.println("Clicked 02");
+                System.out.println("Right button clicked");
             }
         });
     }
-    private void secondScreen(final Image toy){
+
+    private void playScreen(final Image toy){
         toy.setPosition( this.toy.getX(), this.toy.getY());
         toy.setSize(3, 3);
         stage.addActor(toy);
         ballDragAndDrop();
-
     }
+
     private void ballDragAndDrop(){
         DragAndDrop dragAndDrop = new DragAndDrop();
         dragAndDrop.addSource(new Source(ball) {
@@ -168,11 +183,10 @@ public class GameRenderer {
         });
     }
 
-    private void drawPet(Image imagePet){
-        imagePet.setPosition( pet.getX(), pet.getY());
-        imagePet.setWidth(pet.getWidth());
-        imagePet.setHeight(pet.getHeight());
-        stage.addActor(imagePet);
+    private void foodScreen(){ }
+
+    private void foodDragAndDrop(){
+
     }
 
     private void gameObjectsInit(){
@@ -210,10 +224,4 @@ public class GameRenderer {
         stage.draw();
     }
 
-    //Determine the current screen
-    enum ScreenNo{
-        FIRST_SCREEN,
-        SECOND_SCREEN,
-        THIRD_SCREEN
-    }
 }
