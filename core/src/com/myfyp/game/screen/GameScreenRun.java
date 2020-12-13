@@ -2,17 +2,34 @@ package com.myfyp.game.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.myfyp.game.GameWorld.GameRenderer;
-import com.myfyp.game.GameWorld.GameRendererRun;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myfyp.game.GameWorld.GameWorld;
 import com.myfyp.game.helper.StepCounterInterface;
 
 public class GameScreenRun implements Screen {
     GameWorld world;
-    GameRendererRun rendererRun;
     int runTime;
 
-    public GameScreenRun(Game game, StepCounterInterface stepCounter){
+    private OrthographicCamera camera;
+    private Skin skin;
+    private Stage stage;
+    private Viewport viewport;
+    private Game game;
+    private Table table;
+
+    private StepCounterInterface stepCounter;
+
+
+    public GameScreenRun(final Game game, final StepCounterInterface stepCounter){
 
         //Info about the screen size
         float screenWidth = Gdx.graphics.getWidth();
@@ -22,21 +39,43 @@ public class GameScreenRun implements Screen {
         float ppu = screenWidth/gameWidthF; // pixel per inch
         float gameHeightF = screenHeight /ppu;
 
-        int gameWidth = (int)gameWidthF;
-        int gameHeight = (int)gameHeightF;
-        int midPointY = (int) (gameHeightF / 2);
+        camera = new OrthographicCamera(gameWidthF, gameHeightF);
+        camera.setToOrtho(false);
+        viewport = new FitViewport(camera.viewportWidth, camera.viewportHeight, camera);
+        stage = new Stage(viewport);
 
-        world = new GameWorld(gameWidth, gameHeight, midPointY);
-        rendererRun = new GameRendererRun(world, gameWidth, gameHeight, midPointY, game, stepCounter);
+        table = new Table();
+        table.setFillParent(true);
+        table.setDebug(true);
+        stage.addActor(table);
 
+        Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+        TextButton backButton = new TextButton("Back", skin);
+
+        backButton.setTransform(true);
+
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new GameScreen(game, stepCounter));
+            }
+        });
+        table.add(backButton).uniformX().getFillX();
+        table.debug();
+
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-
         runTime += delta;
-        world.update(delta);
-        rendererRun.render(runTime);
+        camera.update();
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
 
     }
 
