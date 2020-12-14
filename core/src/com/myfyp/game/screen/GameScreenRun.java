@@ -46,23 +46,33 @@ public class GameScreenRun implements Screen {
 
         table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
         stage.addActor(table);
 
         Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+        TextButton pauseButton = new TextButton("Pause", skin);
+        TextButton resumeButton = new TextButton("Resume", skin);
         TextButton backButton = new TextButton("Back", skin);
 
         backButton.setTransform(true);
-
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                //Confirmation button
                 game.setScreen(new GameScreen(game, stepCounter));
+                dispose();
             }
         });
-        table.add(backButton).uniformX().getFillX();
-        table.debug();
 
+        pauseButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //Pause countdown
+            }
+        });
+
+        table.add(pauseButton).uniformX().getFillX();
+        table.row();
+        table.add(backButton).pad(1).uniformX().getFillX();
 
         Gdx.input.setInputProcessor(stage);
     }

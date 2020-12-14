@@ -2,13 +2,12 @@ package GameObjects;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class ArrowLeft {
-
+public class Food {
     private int width;
     private int height;
     private Vector2 position;
 
-    public ArrowLeft(int width, int height, float x, float y){
+    public Food(int width, int height, float x, float y){
         this.width = width;
         this.height = height;
         position = new Vector2(x, y);
@@ -22,12 +21,11 @@ public class ArrowLeft {
         return position.y;
     }
 
-
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 }

@@ -14,11 +14,6 @@ public class ArrowRight {
             position = new Vector2(x, y);
         }
 
-    public void onClick() {
-        //WOFF!
-        this.width = width/2;
-        this.height = height/2;
-    }
     public float getX() {
         return position.x;
     }

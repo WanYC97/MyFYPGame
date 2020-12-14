@@ -10,6 +10,7 @@ public class AssetLoader {
     public static BitmapFont shadow;
     public static Texture arrowLeft;
     public static Texture arrowRight;
+    public static Texture runButton;
     public static Texture toy;
 
     public static void load(){
@@ -23,6 +24,7 @@ public class AssetLoader {
 
         arrowLeft = new Texture((Gdx.files.internal("arrow_left.png")));
         arrowRight = new Texture((Gdx.files.internal("arrow_right.png")));
+        runButton = new Texture((Gdx.files.internal("badlogic.jpg")));
 
         toy = new Texture((Gdx.files.internal("toy.png")));
 

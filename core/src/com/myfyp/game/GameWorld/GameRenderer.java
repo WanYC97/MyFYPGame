@@ -8,9 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,12 +22,16 @@ import com.myfyp.game.helper.AssetLoader;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.myfyp.game.helper.StepCounterInterface;
+import com.myfyp.game.screen.GameScreen;
 import com.myfyp.game.screen.GameScreenRun;
 
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
 import GameObjects.Pet;
+import GameObjects.RunButton;
 import GameObjects.Toy;
+
+import static com.myfyp.game.helper.AssetLoader.dispose;
 
 public class GameRenderer {
 
@@ -46,7 +54,8 @@ public class GameRenderer {
     private Toy toy;
     private ArrowLeft arrowLeft;
     private ArrowRight arrowRight;
-    public Image imagePet, ball, a_left, a_right;
+    private RunButton runButton;
+    public Image imagePet, ball, a_left, a_right, imageRunButton;
 
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
@@ -75,6 +84,7 @@ public class GameRenderer {
 
         placeArrow(a_left, a_right, ball);
         placePet(imagePet);
+        placeRunButton();
         addStepCount();
         Gdx.input.setInputProcessor(stage);
 
@@ -85,12 +95,46 @@ public class GameRenderer {
         shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
+    private void gameObjectsInit(){
+        pet = world.getPet();
+        toy = world.getToy();
+        arrowLeft = world.getArrowLeft();
+        arrowRight = world.getArrowRight();
+        runButton = world.getRunButton();
+    }
+
+    private void assetsInit(){
+        AssetLoader.load();
+        imagePet = new Image(AssetLoader.shiba);
+        ball = new Image(AssetLoader.toy);
+        a_left = new Image(AssetLoader.arrowLeft);
+        a_right = new Image(AssetLoader.arrowRight);
+        imageRunButton = new Image(AssetLoader.runButton);
+    }
+
     private float countStep(){
         return stepCounter.getStepCount();
     }
 
     private void addStepCount(){
         screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
+    }
+
+    private void placeRunButton(){
+        imageRunButton.setPosition(runButton.getX(), runButton.getY());
+        imageRunButton.setWidth(runButton.getWidth());
+        imageRunButton.setHeight(runButton.getHeight());
+        stage.addActor(imageRunButton);
+
+        imageRunButton.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                if(myVar == ScreenNo.FIRST_SCREEN){
+                    game.setScreen(new GameScreenRun(game, stepCounter));
+                    dispose();
+                }
+                System.out.println("Play button clicked");
+            }
+        });
     }
 
     private void placePet(Image imagePet){
@@ -111,29 +155,35 @@ public class GameRenderer {
         arrowRightImage.setHeight(arrowRight.getHeight());
         stage.addActor(arrowRightImage);
 
+        //LEFT ARROW FOR FOOD SCREEN
         arrowLeftImage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
+                    myVar = ScreenNo.SECOND_SCREEN;
                     //Go to left
                 }
                 else if(myVar == ScreenNo.SECOND_SCREEN){
                     //Do nothing
                 }
                 else if(myVar == ScreenNo.THIRD_SCREEN){
-                    //return to first screen
+                    //Change BG
+                    ball.remove();
+                    myVar = ScreenNo.FIRST_SCREEN;
                 }
                 System.out.println("Left button clicked");
 
             }
         });
 
+        //RIGHT ARROW FOR TOY SCREEN
         arrowRightImage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
                     playScreen(toy);
+                    myVar = ScreenNo.THIRD_SCREEN;
                 }
                 else if(myVar == ScreenNo.SECOND_SCREEN){
-                    //return to first screen
+                    myVar = ScreenNo.FIRST_SCREEN;
                 }
                 else if(myVar == ScreenNo.THIRD_SCREEN){
                     //Do nothing
@@ -177,32 +227,23 @@ public class GameRenderer {
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                 getActor().setColor(Color.WHITE);
                 System.out.println("Dropped");
+                //Play playing animation
+                //Add fun score
+
                 game.setScreen(new GameScreenRun(game, stepCounter));
                 ball.remove();
+                dispose();
             }
         });
     }
 
-    private void foodScreen(){ }
+    private void foodScreen(){
+    }
 
     private void foodDragAndDrop(){
 
     }
 
-    private void gameObjectsInit(){
-        pet = world.getPet();
-        toy = world.getToy();
-        arrowLeft = world.getArrowLeft();
-        arrowRight = world.getArrowRight();
-    }
-
-    private void assetsInit(){
-        AssetLoader.load();
-        imagePet = new Image(AssetLoader.shiba);
-        ball = new Image(AssetLoader.toy);
-        a_left = new Image(AssetLoader.arrowLeft);
-        a_right = new Image(AssetLoader.arrowRight);
-    }
 
     public void render(float runTime){
         Gdx.gl.glClearColor(1, 1, 1, 1);
