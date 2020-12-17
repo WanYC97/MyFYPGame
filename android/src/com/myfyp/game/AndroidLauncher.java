@@ -1,7 +1,14 @@
 package com.myfyp.game;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,15 +16,24 @@ import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.myfyp.game.helper.StepCounterInterface;
 
-public class AndroidLauncher extends AndroidApplication {
+public class AndroidLauncher extends AndroidApplication implements SensorEventListener, StepCounterInterface {
 	public static final int MY_PERMISSIONS_REQUEST_ACTIVITY = 99;
+	private SensorManager mSensorManager;
+	private Sensor sensor;
+	float stepCount;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		//checkActivityPermission();
+		checkActivityPermission();
+
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+		mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+
 		begin();
 	}
 
@@ -57,9 +73,37 @@ public class AndroidLauncher extends AndroidApplication {
 			}
 		}
 	}
+
 	public void begin(){
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new MyFypGame(new StepCounter()), config);
+		initialize(new MyFypGame(new AndroidLauncher()), config);
 	}
 
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		stepCount = event.values[0];
+		System.out.println("event.values[0] is " + event.values[0]);
+		System.out.println("STEPCOUNT IS " + stepCount);
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mSensorManager.unregisterListener(this, sensor);
+	}
+
+	public float getStepCount() {
+		System.out.println("GETSTEPCOUNT INVOKED " + stepCount);
+		return stepCount;
+	}
 }

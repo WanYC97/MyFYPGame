@@ -6,7 +6,7 @@ import com.myfyp.game.screen.GameScreen;
 
 public class MyFypGame extends Game {
 	private Game game;
-	private StepCounterInterface stepCounter;
+	private final StepCounterInterface stepCounter;
 
 	public MyFypGame(StepCounterInterface stepCounter){
 		game = this;

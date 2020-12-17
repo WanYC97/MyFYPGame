@@ -2,6 +2,7 @@ package com.myfyp.game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,13 +14,15 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 public class StepCounterApi extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor sensor;
+    private Activity activity;
     float stepCount;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        System.out.println("ONCREATE START");
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
+        System.out.println("ONCREATE START");
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);

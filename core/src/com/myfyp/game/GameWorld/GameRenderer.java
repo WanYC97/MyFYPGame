@@ -58,7 +58,7 @@ public class GameRenderer {
     private Coin coin;
     private Fun fun;
     private Happiness happiness;
-    public Image imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageCoin, imageFun, imageHappiness;
+    public Image imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
 
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
@@ -120,6 +120,10 @@ public class GameRenderer {
         imagePet = new Image(AssetLoader.shiba);
         imageBall = new Image(AssetLoader.toy);
         imageFood = new Image(AssetLoader.food);
+
+        imageFood2 = new Image(AssetLoader.food);
+        imageFood3 = new Image(AssetLoader.food);
+
         a_left = new Image(AssetLoader.arrowLeft);
         a_right = new Image(AssetLoader.arrowRight);
         imageRunButton = new Image(AssetLoader.runButton);
@@ -129,7 +133,8 @@ public class GameRenderer {
     }
 
     private float countStep(){
-        return stepCounter.getStepCount();
+        STEP_COUNT = stepCounter.getStepCount();
+        return STEP_COUNT;
     }
 
     private void addStepCount(){
@@ -148,7 +153,6 @@ public class GameRenderer {
                     game.setScreen(new GameScreenRun(game, stepCounter));
                     dispose();
                 }
-                System.out.println("Play button clicked");
             }
         });
     }
@@ -236,8 +240,17 @@ public class GameRenderer {
 
     private void foodScreen(){
         imageFood.setPosition( this.toy.getX(), this.toy.getY());
+        imageFood2.setPosition( this.toy.getX()-5, this.toy.getY());
+        imageFood3.setPosition( this.toy.getX()+5, this.toy.getY());
+
         imageFood.setSize(3, 3);
+        imageFood2.setSize(3, 3);
+        imageFood3.setSize(3, 3);
+
         stage.addActor(imageFood);
+        stage.addActor(imageFood2);
+        stage.addActor(imageFood3);
+
         actorDragAndDrop();
     }
 
@@ -254,10 +267,41 @@ public class GameRenderer {
                 }
                 public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
                     if(target == null){
-                        imageFood.setPosition(food.getX(), food.getY());
+                        imageFood.setPosition(toy.getX(), toy.getY());
                     }
                 }
             });
+
+            dragAndDrop.addSource(new Source(imageFood2) {
+                public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
+                    System.out.println("Drag Start");
+                    Payload payload = new Payload();
+                    payload.setObject(imageFood2);
+                    payload.setDragActor(imageFood2);
+                    return payload;
+                }
+                public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
+                    if(target == null){
+                        imageFood2.setPosition(toy.getX()-5, toy.getY());
+                    }
+                }
+            });
+
+            dragAndDrop.addSource(new Source(imageFood3) {
+                public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
+                    System.out.println("Drag Start");
+                    Payload payload = new Payload();
+                    payload.setObject(imageFood3);
+                    payload.setDragActor(imageFood3);
+                    return payload;
+                }
+                public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
+                    if(target == null){
+                        imageFood3.setPosition(toy.getX()+5, toy.getY());
+                    }
+                }
+            });
+
             dragAndDrop.addTarget(new DragAndDrop.Target(imagePet) {
                 @Override
                 public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
@@ -274,9 +318,11 @@ public class GameRenderer {
 
                     game.setScreen(new GameScreenRun(game, stepCounter));
                     imageFood.remove();
+                    imageFood2.remove();
+                    imageFood3.remove();
+
                     dispose();
                 }
-
             });
         }
 
@@ -332,9 +378,8 @@ public class GameRenderer {
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.1f,0.1f);
         screenNumber.draw(batcher, Float.toString(STEP_COUNT), gameWidth >> 1, gameHeight -2);
-        STEP_COUNT = countStep();
+        countStep();
         batcher.end();
-        System.out.println(STEP_COUNT);
         stage.act();
         stage.draw();
     }
