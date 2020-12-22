@@ -4,7 +4,12 @@ import com.myfyp.game.helper.StepCounterInterface;
 
 public class StepCounterHTML implements StepCounterInterface {
     @Override
-    public int getStepCount() {
+    public float getCURRENT_STEP() {
         return 2;
+    }
+
+    @Override
+    public void setCURRENT_STEP(float CURRENT_STEP) {
+
     }
 }

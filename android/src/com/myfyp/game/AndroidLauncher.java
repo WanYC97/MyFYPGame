@@ -1,9 +1,7 @@
 package com.myfyp.game;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -22,7 +20,8 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 	public static final int MY_PERMISSIONS_REQUEST_ACTIVITY = 99;
 	private SensorManager mSensorManager;
 	private Sensor sensor;
-	float stepCount;
+	private Sensor sensor_Detector;
+	private static float CURRENT_STEP;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -32,8 +31,20 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-		mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+		sensor_Detector = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+		try{
+			if(sensor != null){
+				mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+				System.out.println("Sensor.TYPE_STEP_COUNTER");
 
+			}
+			else if(sensor_Detector != null)
+				mSensorManager.registerListener(this, sensor_Detector, SensorManager.SENSOR_DELAY_FASTEST);
+				System.out.println("Sensor.TYPE_STEP_DETECTOR");
+		}
+		catch(Exception exception){
+			System.out.println("No count sensor!");
+		}
 		begin();
 	}
 
@@ -81,9 +92,14 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		stepCount = event.values[0];
-		System.out.println("event.values[0] is " + event.values[0]);
-		System.out.println("STEPCOUNT IS " + stepCount);
+		if (event.sensor.getType()  == Sensor.TYPE_STEP_COUNTER) {
+			CURRENT_STEP = event.values[0];
+		} else if (event.sensor.getType()  == Sensor.TYPE_STEP_DETECTOR) {
+			if (event.values[0] == 1.0) {
+				CURRENT_STEP++;
+				System.out.println("DETECTOR " + CURRENT_STEP);
+			}
+		}
 	}
 
 	@Override
@@ -93,17 +109,20 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		mSensorManager.unregisterListener(this, sensor);
 	}
 
-	public float getStepCount() {
-		System.out.println("GETSTEPCOUNT INVOKED " + stepCount);
-		return stepCount;
+	public float getCURRENT_STEP() {
+		//System.out.println("GETSTEPCOUNT INVOKED " + CURRENT_STEP);
+		return CURRENT_STEP;
+	}
+
+	@Override
+	public void setCURRENT_STEP(float CURRENT_STEP) {
+
 	}
 }

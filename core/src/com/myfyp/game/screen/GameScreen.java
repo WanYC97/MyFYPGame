@@ -16,6 +16,8 @@ import com.myfyp.game.GameWorld.GameWorld;
 import com.myfyp.game.MyFypGame;
 import com.myfyp.game.helper.StepCounterInterface;
 
+import java.util.GregorianCalendar;
+
 import GameObjects.Pet;
 
 public class GameScreen implements Screen {
@@ -29,10 +31,9 @@ public class GameScreen implements Screen {
 
     StepCounterInterface stepCounter;
 
-
-
     public GameScreen(Game game, StepCounterInterface stepCounter){
         this.game = game;
+        //Calendar and step counter
         this.stepCounter = stepCounter;
         //Info about the screen size
         float screenWidth = Gdx.graphics.getWidth();

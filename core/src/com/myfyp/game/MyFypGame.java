@@ -4,6 +4,8 @@ import com.badlogic.gdx.Game;
 import com.myfyp.game.helper.StepCounterInterface;
 import com.myfyp.game.screen.GameScreen;
 
+import java.util.GregorianCalendar;
+
 public class MyFypGame extends Game {
 	private Game game;
 	private final StepCounterInterface stepCounter;

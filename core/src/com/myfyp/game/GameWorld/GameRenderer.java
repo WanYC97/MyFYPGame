@@ -1,3 +1,4 @@
+
 package com.myfyp.game.GameWorld;
 
 import com.badlogic.gdx.Game;
@@ -8,8 +9,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
@@ -60,6 +63,8 @@ public class GameRenderer {
     private Happiness happiness;
     public Image imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
 
+    boolean action = false;
+
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
 
@@ -73,7 +78,8 @@ public class GameRenderer {
         THIRD_SCREEN
     }
 
-    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, Game game, StepCounterInterface stepCounter, OrthographicCamera camera, Viewport viewport, Stage stage) {
+    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, Game game, StepCounterInterface stepCounter,
+                        OrthographicCamera camera, Viewport viewport, Stage stage) {
         this.world = world;
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
@@ -133,8 +139,14 @@ public class GameRenderer {
     }
 
     private float countStep(){
-        STEP_COUNT = stepCounter.getStepCount();
+        if(stepCounter.getCURRENT_STEP()>STEP_COUNT){
+            STEP_COUNT = stepCounter.getCURRENT_STEP();
+        }
+        playAnimation();
         return STEP_COUNT;
+    }
+
+    private void playAnimation(){
     }
 
     private void addStepCount(){
