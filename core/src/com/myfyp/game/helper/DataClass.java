@@ -6,6 +6,10 @@ public class DataClass {
     private static float UPGRADE1_COUNT;
     private static float UPGRADE2_COUNT;
 
+    private static float UPGRADE1_MULTIPLIER = 1.05f;
+    private static float UPGRADE2_MULTIPLIER = 1.10f;
+
+
     public static float getMONEY() {
         return MONEY;
     }
@@ -36,5 +40,21 @@ public class DataClass {
 
     public static void setUpgrade2Count(float upgrade2Count) {
         UPGRADE2_COUNT = upgrade2Count;
+    }
+
+    public static float getUpgrade1Multiplier() {
+        return UPGRADE1_MULTIPLIER;
+    }
+
+    public static float getUpgrade2Multiplier() {
+        return UPGRADE2_MULTIPLIER;
+    }
+
+    public static void setUpgrade1Multiplier(float upgrade1Multiplier) {
+        UPGRADE1_MULTIPLIER = upgrade1Multiplier;
+    }
+
+    public static void setUpgrade2Multiplier(float upgrade2Multiplier) {
+        UPGRADE2_MULTIPLIER = upgrade2Multiplier;
     }
 }

@@ -59,9 +59,6 @@ public class GameRenderer {
     private float STEP_COUNT;
     private float MONEY;
 
-    private static float UPGRADE1_MULTIPLIER = 1.05f;
-    private static float UPGRADE2_MULTIPLIER = 1.10f;
-
     //Game Object
     private Pet pet;
     private Toy toy;
