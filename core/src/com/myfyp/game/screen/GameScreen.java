@@ -2,6 +2,9 @@ package com.myfyp.game.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.myfyp.game.helper.DataClass;
+import com.myfyp.game.helper.PreferenceManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -48,6 +51,7 @@ public class GameScreen implements Screen {
         int gameHeight = (int)gameHeightF;
         int midPointY = (int) (gameHeightF / 2);
 
+
         camera = new OrthographicCamera(gameWidth, gameHeight);
         camera.setToOrtho(false, gameWidth, gameHeight);
         viewport = new FitViewport(camera.viewportWidth, camera.viewportHeight, camera);
@@ -91,8 +95,12 @@ public class GameScreen implements Screen {
 
     }
 
+
     @Override
     public void dispose() {
+
+
         stage.dispose();
+
     }
 }

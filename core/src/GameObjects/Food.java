@@ -21,6 +21,10 @@ public class Food {
         return position.y;
     }
 
+    public void setY(float y){
+        this.position.y = y;
+    }
+
     public float getWidth() {
         return width;
     }

@@ -32,6 +32,9 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 		sensor_Detector = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+		mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+		mSensorManager.registerListener(this, sensor_Detector, SensorManager.SENSOR_DELAY_FASTEST);
+		/*
 		try{
 			if(sensor != null){
 				mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
@@ -42,9 +45,10 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 				mSensorManager.registerListener(this, sensor_Detector, SensorManager.SENSOR_DELAY_FASTEST);
 				System.out.println("Sensor.TYPE_STEP_DETECTOR");
 		}
+
 		catch(Exception exception){
 			System.out.println("No count sensor!");
-		}
+		}	*/
 		begin();
 	}
 
@@ -117,7 +121,6 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 	}
 
 	public float getCURRENT_STEP() {
-		//System.out.println("GETSTEPCOUNT INVOKED " + CURRENT_STEP);
 		return CURRENT_STEP;
 	}
 

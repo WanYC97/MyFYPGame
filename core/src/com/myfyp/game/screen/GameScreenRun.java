@@ -13,8 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myfyp.game.GameWorld.GameWorld;
+import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
-
+import com.myfyp.game.screen.GameScreen;
 import java.util.GregorianCalendar;
 
 public class GameScreenRun implements Screen {
@@ -27,6 +28,7 @@ public class GameScreenRun implements Screen {
     private Viewport viewport;
     private Game game;
     private Table table;
+
 
     private StepCounterInterface stepCounter;
 
@@ -51,28 +53,39 @@ public class GameScreenRun implements Screen {
         stage.addActor(table);
 
         Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-        TextButton pauseButton = new TextButton("Pause", skin);
-        TextButton resumeButton = new TextButton("Resume", skin);
+        TextButton upgradeButton1 = new TextButton("Upgrade 1", skin);
+        TextButton upgradeButton2 = new TextButton("Upgrade 2", skin);
+
         TextButton backButton = new TextButton("Back", skin);
 
         backButton.setTransform(true);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //Confirmation button
                 game.setScreen(new GameScreen(game, stepCounter));
                 dispose();
             }
         });
 
-        pauseButton.addListener(new ChangeListener() {
+        upgradeButton1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //Pause countdown
+                DataClass.setUpgrade1Count(DataClass.getUpgrade1Count()+1);
+                System.out.println(DataClass.getUpgrade1Count());
             }
         });
 
-        table.add(pauseButton).uniformX().getFillX();
+        upgradeButton2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DataClass.setUpgrade2Count(DataClass.getUpgrade2Count()+1);
+                System.out.println(DataClass.getUpgrade2Count());
+            }
+        });
+
+        table.add(upgradeButton1).uniformX().getFillX();
+        table.row();
+        table.add(upgradeButton2).uniformX().getFillX();
         table.row();
         table.add(backButton).pad(1).uniformX().getFillX();
 
@@ -117,6 +130,7 @@ public class GameScreenRun implements Screen {
 
     @Override
     public void dispose() {
+
 
     }
 }
