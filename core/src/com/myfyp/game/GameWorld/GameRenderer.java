@@ -49,8 +49,6 @@ public class GameRenderer {
     private Viewport viewport;
 
     private StepCounterInterface stepCounter;
-    //private float STEP_COUNT;
-    //private float MONEY;
 
     //Game Object
     private Pet pet;
@@ -90,7 +88,7 @@ public class GameRenderer {
 
         gameObjectsInit();
         assetsInit();
-        countStep();
+
         //Place elements on screen
         placeArrow();
         placePet();
@@ -132,22 +130,6 @@ public class GameRenderer {
         imageCoin = new Image(AssetLoader.coin);
         imageFun = new Image(AssetLoader.fun);
         imageHappiness = new Image(AssetLoader.happiness);
-    }
-
-    private void countStep(){
-        if(stepCounter.getCURRENT_STEP()>DataClass.getStepCount()){
-            DataClass.setStepCount(stepCounter.getCURRENT_STEP());
-        }
-        playAnimation();
-        //return STEP_COUNT;
-    }
-
-    private void convertToMoney(){
-        //base + multiply by number of upgrades * upgrade type
-        DataClass.setMONEY(DataClass.getStepCount() * (
-                (DataClass.getUpgrade1Count() * DataClass.getUpgrade1Multiplier())
-                + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier())
-                ));
     }
 
     private void playAnimation(){
@@ -401,14 +383,18 @@ public class GameRenderer {
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(pet.getBoundingRectangle().x, pet.getBoundingRectangle().y, pet.getX(),pet.getY());
         shapeRenderer.end();
-        System.out.println(DataClass.getUpgrade1Count());
-        System.out.println(DataClass.getUpgrade2Count());
-
-        convertToMoney();
 
         batcher.begin();
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.03f,0.03f);
+
+
+        screenNumber2.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        screenNumber2.getData().setScale(0.03f,0.03f);
+
+
+        screenNumber3.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        screenNumber3.getData().setScale(0.03f,0.03f);
 
         //PRINT STEP COUNT,  MONEY
         screenNumber.draw(batcher, Float.toString(DataClass.getStepCount()), coin.getX() +3, coin.getY());
@@ -417,7 +403,8 @@ public class GameRenderer {
 
         batcher.end();
 
-        countStep();
+        playAnimation();
+
         stage.act();
         stage.draw();
     }

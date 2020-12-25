@@ -65,7 +65,21 @@ public class GameScreen implements Screen {
         runTime += delta;
         world.update(delta);
         renderer.render(runTime);
+        countStep();
+        convertToMoney();
+    }
 
+    private void countStep(){
+        if(stepCounter.getCURRENT_STEP()>DataClass.getStepCount()){
+            DataClass.setStepCount(stepCounter.getCURRENT_STEP());
+        }
+    }
+
+    private void convertToMoney(){
+        //base + multiply by number of upgrades * upgrade type
+        DataClass.setMONEY(DataClass.getStepCount() +
+                        (DataClass.getStepCount() * ((DataClass.getUpgrade1Count() * DataClass.getUpgrade1Multiplier())
+                        + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier()))));
     }
 
     @Override

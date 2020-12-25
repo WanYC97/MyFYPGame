@@ -31,10 +31,14 @@ public class MyFypGame extends Game {
 		DataClass.setUpgrade2Count(preferenceManager.getFloatValue("UPGRADE2"));
 		DataClass.setStepCount(preferenceManager.getFloatValue("STEP_COUNT"));
 		DataClass.setMONEY(preferenceManager.getFloatValue("MONEY"));
+
+		/*
 		DataClass.setUpgrade1Multiplier(preferenceManager.getFloatValue("UPGRADE1_MULTIPLIER"));
 		DataClass.setUpgrade2Multiplier(preferenceManager.getFloatValue("UPGRADE2_MULTIPLIER"));
 		DataClass.setPRICE1(preferenceManager.getFloatValue("UPGRADE1_PRICE"));
 		DataClass.setPRICE2(preferenceManager.getFloatValue("UPGRADE2_PRICE"));
+
+		 */
 	}
 
 	@Override
@@ -49,10 +53,10 @@ public class MyFypGame extends Game {
 		preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade2Count());
 		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getStepCount());
 		preferenceManager.setFloatValue("MONEY", DataClass.getMONEY());
-		preferenceManager.setFloatValue("UPGRADE1_MULTIPLIER", DataClass.getUpgrade1Multiplier());
-		preferenceManager.setFloatValue("UPGRADE2_MULTIPLIER", DataClass.getUpgrade2Multiplier());
-		preferenceManager.setFloatValue("UPGRADE1_PRICE", DataClass.getPRICE1());
-		preferenceManager.setFloatValue("UPGRADE2_PRICE", DataClass.getPRICE2());
+		//preferenceManager.setFloatValue("UPGRADE1_MULTIPLIER", DataClass.getUpgrade1Multiplier());
+		//preferenceManager.setFloatValue("UPGRADE2_MULTIPLIER", DataClass.getUpgrade2Multiplier());
+		//preferenceManager.setFloatValue("UPGRADE1_PRICE", DataClass.getPRICE1());
+		//preferenceManager.setFloatValue("UPGRADE2_PRICE", DataClass.getPRICE2());
 		super.dispose();
 	}
 

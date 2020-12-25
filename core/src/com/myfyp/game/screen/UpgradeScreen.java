@@ -63,7 +63,7 @@ public class UpgradeScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 DataClass.setUpgrade1Count(DataClass.getUpgrade1Count() + 1);
-                DataClass.setCOST(DataClass.getCOST() + DataClass.getPRICE1());
+                DataClass.setCOST(DataClass.getCOST() + (DataClass.getUpgrade1Count() * DataClass.getPRICE1()) );
                 System.out.println("UPGRADE 1 COUNT IS: " + DataClass.getUpgrade1Count());
                 System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE1());
                 System.out.println("CURRENT COST IS: " + DataClass.getCOST());
@@ -74,7 +74,7 @@ public class UpgradeScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 DataClass.setUpgrade2Count(DataClass.getUpgrade2Count() + 1);
-                DataClass.setCOST(DataClass.getCOST() + DataClass.getPRICE2());
+                DataClass.setCOST(DataClass.getCOST() + (DataClass.getUpgrade2Count() * DataClass.getPRICE2()) );
                 System.out.println("UPGRADE 2 COUNT IS: " + DataClass.getUpgrade2Count());
                 System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE2());
                 System.out.println("CURRENT COST IS: " + DataClass.getCOST());
