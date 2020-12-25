@@ -18,22 +18,23 @@ import com.myfyp.game.helper.StepCounterInterface;
 import com.myfyp.game.screen.GameScreen;
 import java.util.GregorianCalendar;
 
-public class GameScreenRun implements Screen {
-    GameWorld world;
-    int runTime;
+import javax.xml.crypto.Data;
 
-    private OrthographicCamera camera;
+public class UpgradeScreen implements Screen {
+
+    int runTime;
     private Skin skin;
+    //private Game game;
+    private OrthographicCamera camera;
     private Stage stage;
     private Viewport viewport;
-    private Game game;
     private Table table;
 
 
     private StepCounterInterface stepCounter;
 
 
-    public GameScreenRun(final Game game, final StepCounterInterface stepCounter){
+    public UpgradeScreen(final Game game, final StepCounterInterface stepCounter){
 
         //Info about the screen size
         float screenWidth = Gdx.graphics.getWidth();
@@ -52,11 +53,33 @@ public class GameScreenRun implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
         TextButton upgradeButton1 = new TextButton("Upgrade 1", skin);
         TextButton upgradeButton2 = new TextButton("Upgrade 2", skin);
 
         TextButton backButton = new TextButton("Back", skin);
+
+        upgradeButton1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DataClass.setUpgrade1Count(DataClass.getUpgrade1Count() + 1);
+                DataClass.setCOST(DataClass.getCOST() + DataClass.getPRICE1());
+                System.out.println("UPGRADE 1 COUNT IS: " + DataClass.getUpgrade1Count());
+                System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE1());
+                System.out.println("CURRENT COST IS: " + DataClass.getCOST());
+            }
+        });
+
+        upgradeButton2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DataClass.setUpgrade2Count(DataClass.getUpgrade2Count() + 1);
+                DataClass.setCOST(DataClass.getCOST() + DataClass.getPRICE2());
+                System.out.println("UPGRADE 2 COUNT IS: " + DataClass.getUpgrade2Count());
+                System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE2());
+                System.out.println("CURRENT COST IS: " + DataClass.getCOST());
+            }
+        });
 
         backButton.setTransform(true);
         backButton.addListener(new ChangeListener() {
@@ -64,22 +87,6 @@ public class GameScreenRun implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new GameScreen(game, stepCounter));
                 dispose();
-            }
-        });
-
-        upgradeButton1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                DataClass.setUpgrade1Count(DataClass.getUpgrade1Count()+1);
-                System.out.println(DataClass.getUpgrade1Count());
-            }
-        });
-
-        upgradeButton2.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                DataClass.setUpgrade2Count(DataClass.getUpgrade2Count()+1);
-                System.out.println(DataClass.getUpgrade2Count());
             }
         });
 
@@ -101,12 +108,10 @@ public class GameScreenRun implements Screen {
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
-
     }
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -115,22 +120,17 @@ public class GameScreenRun implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-
-
     }
 }

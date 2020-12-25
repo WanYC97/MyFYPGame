@@ -51,7 +51,6 @@ public class GameScreen implements Screen {
         int gameHeight = (int)gameHeightF;
         int midPointY = (int) (gameHeightF / 2);
 
-
         camera = new OrthographicCamera(gameWidth, gameHeight);
         camera.setToOrtho(false, gameWidth, gameHeight);
         viewport = new FitViewport(camera.viewportWidth, camera.viewportHeight, camera);
@@ -59,7 +58,6 @@ public class GameScreen implements Screen {
 
         world = new GameWorld(gameWidth, gameHeight, midPointY);
         renderer = new GameRenderer(world, gameWidth, gameHeight, game, stepCounter, camera, viewport, stage);
-
     }
 
     @Override
@@ -98,9 +96,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
-
         stage.dispose();
-
     }
 }

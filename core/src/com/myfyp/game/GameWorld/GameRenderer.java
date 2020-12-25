@@ -3,33 +3,26 @@ package com.myfyp.game.GameWorld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myfyp.game.helper.AssetLoader;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
-import com.myfyp.game.screen.GameScreenRun;
-import com.myfyp.game.helper.PreferenceManager;
+import com.myfyp.game.screen.UpgradeScreen;
 
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
@@ -47,7 +40,7 @@ public class GameRenderer {
     private int gameWidth;
     private int gameHeight;
     private SpriteBatch batcher;
-    private BitmapFont screenNumber;
+    private BitmapFont screenNumber, screenNumber2, screenNumber3;
     private GameWorld world;
     private ShapeRenderer shapeRenderer;
     private Game game;
@@ -56,8 +49,8 @@ public class GameRenderer {
     private Viewport viewport;
 
     private StepCounterInterface stepCounter;
-    private float STEP_COUNT;
-    private float MONEY;
+    //private float STEP_COUNT;
+    //private float MONEY;
 
     //Game Object
     private Pet pet;
@@ -94,9 +87,6 @@ public class GameRenderer {
         this.camera = camera;
         this.viewport = viewport;
         this.stage = stage;
-
-        STEP_COUNT = DataClass.getStepCount();
-        MONEY = DataClass.getMONEY();
 
         gameObjectsInit();
         assetsInit();
@@ -144,18 +134,20 @@ public class GameRenderer {
         imageHappiness = new Image(AssetLoader.happiness);
     }
 
-    private float countStep(){
-        if(stepCounter.getCURRENT_STEP()>STEP_COUNT){
-            STEP_COUNT = stepCounter.getCURRENT_STEP();
+    private void countStep(){
+        if(stepCounter.getCURRENT_STEP()>DataClass.getStepCount()){
+            DataClass.setStepCount(stepCounter.getCURRENT_STEP());
         }
         playAnimation();
-        return STEP_COUNT;
+        //return STEP_COUNT;
     }
 
-    private float convertToMoney(float STEP_COUNT){
+    private void convertToMoney(){
         //base + multiply by number of upgrades * upgrade type
-        MONEY = STEP_COUNT; //(SC * X1N1 + X2N2...) - COST
-        return MONEY;
+        DataClass.setMONEY(DataClass.getStepCount() * (
+                (DataClass.getUpgrade1Count() * DataClass.getUpgrade1Multiplier())
+                + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier())
+                ));
     }
 
     private void playAnimation(){
@@ -173,6 +165,8 @@ public class GameRenderer {
 
     private void addStepCount(){
         screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
+        screenNumber2 = new BitmapFont(Gdx.files.internal("text.fnt"));
+        screenNumber3 = new BitmapFont(Gdx.files.internal("text.fnt"));
     }
 
     private void placeRunButton(){
@@ -184,7 +178,7 @@ public class GameRenderer {
         imageRunButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
-                    game.setScreen(new GameScreenRun(game, stepCounter));
+                    game.setScreen(new UpgradeScreen(game, stepCounter));
                     dispose();
                 }
             }
@@ -350,7 +344,7 @@ public class GameRenderer {
                     //Play playing animation
                     //Add fun score
 
-                    game.setScreen(new GameScreenRun(game, stepCounter));
+                    game.setScreen(new UpgradeScreen(game, stepCounter));
                     imageFood.remove();
                     imageFood2.remove();
                     imageFood3.remove();
@@ -390,7 +384,7 @@ public class GameRenderer {
                     //Play playing animation
                     //Add fun score
 
-                    game.setScreen(new GameScreenRun(game, stepCounter));
+                    game.setScreen(new UpgradeScreen(game, stepCounter));
                     imageBall.remove();
                     dispose();
                 }
@@ -410,10 +404,17 @@ public class GameRenderer {
         System.out.println(DataClass.getUpgrade1Count());
         System.out.println(DataClass.getUpgrade2Count());
 
+        convertToMoney();
+
         batcher.begin();
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.03f,0.03f);
-        screenNumber.draw(batcher, Float.toString(STEP_COUNT), fun.getX() +3, fun.getY());
+
+        //PRINT STEP COUNT,  MONEY
+        screenNumber.draw(batcher, Float.toString(DataClass.getStepCount()), coin.getX() +3, coin.getY());
+        screenNumber2.draw(batcher, Float.toString(DataClass.getMONEY()), fun.getX() +3, fun.getY());
+        screenNumber3.draw(batcher, Float.toString(DataClass.getCOST()), happiness.getX() +3, happiness.getY());
+
         batcher.end();
 
         countStep();
