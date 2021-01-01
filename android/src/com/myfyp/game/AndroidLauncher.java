@@ -121,6 +121,7 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 	}
 
 	public float getCURRENT_STEP() {
+		//System.out.println(CURRENT_STEP);
 		return CURRENT_STEP;
 	}
 

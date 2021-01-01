@@ -18,7 +18,7 @@ public class AssetLoader {
     public static Texture coin;
     public static Texture fun;
     public static Texture happiness;
-    public static Texture minicookie;
+    public static Texture fallingObject;
 
     public static void load(){
         shiba = new Texture(Gdx.files.internal("shiba.png"));
@@ -40,7 +40,7 @@ public class AssetLoader {
         fun = new Texture((Gdx.files.internal("fun.png")));
         happiness = new Texture((Gdx.files.internal("happiness.png")));
 
-        minicookie = new Texture((Gdx.files.internal("coin.png")));
+        fallingObject = new Texture((Gdx.files.internal("coin.png")));
 
     }
     public static void dispose(){

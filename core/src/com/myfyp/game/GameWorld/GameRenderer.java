@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,9 +25,12 @@ import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
 import com.myfyp.game.screen.UpgradeScreen;
 
+import java.util.ArrayList;
+
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
 import GameObjects.Coin;
+import GameObjects.FallingObject;
 import GameObjects.Food;
 import GameObjects.Fun;
 import GameObjects.Happiness;
@@ -61,6 +65,14 @@ public class GameRenderer {
     private Fun fun;
     private Happiness happiness;
     public Image imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
+
+    private ArrayList<FallingObject> fallongObjectQueue = new ArrayList<>();
+    private int amountFallingObject;
+    private static int MINICOOKIE_WIDTH = 25;
+    private static int MINICOOKIE_HEIGHT = 25;
+    private static float FALLINGOBJECT_THRESHOLD = -1;
+    private static float MINICOOKIE_SPEED = 0.8f;
+    private static float MINICOOKIE_ROTATION_SPEED = 0.25f;
 
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
@@ -149,6 +161,22 @@ public class GameRenderer {
         screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
         screenNumber2 = new BitmapFont(Gdx.files.internal("text.fnt"));
         screenNumber3 = new BitmapFont(Gdx.files.internal("text.fnt"));
+    }
+
+    private void renderFall() {
+        for (FallingObject f_object : fallongObjectQueue) {
+            batcher.draw(AssetLoader.fallingObject, f_object.getX(), f_object.getY(), coin.getWidth(), coin.getHeight());
+            f_object.setY(f_object.getY() - MINICOOKIE_SPEED);
+            //f_object.setRotation((f_object.getRotation() + MINICOOKIE_ROTATION_SPEED) % 360.0f);
+        }
+    }
+
+    private void addCookie() {
+        //CREATE NEW OBJECT TO FALL
+        if (FALLINGOBJECT_THRESHOLD == -1 || amountFallingObject <= FALLINGOBJECT_THRESHOLD) {
+            fallongObjectQueue.add(new FallingObject(MathUtils.random(0, gameWidth), gameHeight, MathUtils.random(0.0f, 360.0f)));
+            amountFallingObject++;
+        }
     }
 
     private void placeRunButton(){
@@ -258,8 +286,8 @@ public class GameRenderer {
         imageFood3.setSize(3, 3);
 
         stage.addActor(imageFood);
-        stage.addActor(imageFood2);
-        stage.addActor(imageFood3);
+        //stage.addActor(imageFood2);
+        //stage.addActor(imageFood3);
 
         actorDragAndDrop();
     }
@@ -281,7 +309,7 @@ public class GameRenderer {
                     }
                 }
             });
-
+/*
             dragAndDrop.addSource(new Source(imageFood2) {
                 public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
                     System.out.println("Drag Start");
@@ -333,7 +361,7 @@ public class GameRenderer {
 
                     dispose();
                 }
-            });
+            });*/
         }
 
         else if(myVar == ScreenNo.THIRD_SCREEN){
@@ -400,6 +428,9 @@ public class GameRenderer {
         screenNumber.draw(batcher, Float.toString(DataClass.getStepCount()), coin.getX() +3, coin.getY());
         screenNumber2.draw(batcher, Float.toString(DataClass.getMONEY()), fun.getX() +3, fun.getY());
         screenNumber3.draw(batcher, Float.toString(DataClass.getCOST()), happiness.getX() +3, happiness.getY());
+
+        addCookie();
+        renderFall();
 
         batcher.end();
 
