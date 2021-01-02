@@ -21,6 +21,8 @@ import com.myfyp.game.helper.StepCounterInterface;
 
 import java.util.GregorianCalendar;
 
+import javax.xml.crypto.Data;
+
 import GameObjects.Pet;
 
 public class GameScreen implements Screen {
@@ -76,10 +78,15 @@ public class GameScreen implements Screen {
     }
 
     private void convertToMoney(){
-        //base + multiply by number of upgrades * upgrade type
-        DataClass.setMONEY(DataClass.getStepCount() +
-                        (DataClass.getStepCount() * ((DataClass.getUpgrade1Count() * DataClass.getUpgrade1Multiplier())
-                        + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier()))));
+        //last base +  (new base - last base) multiply by number of upgrades * upgrade type
+
+        if(stepCounter.getCURRENT_STEP() != DataClass.getLastCount()) {
+            DataClass.setMONEY(DataClass.getLastCount() +
+                    ((DataClass.getStepCount() - DataClass.getLastCount())
+                            * ((DataClass.getUpgrade1Count() * DataClass.getUpgrade1Multiplier())
+                            + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier()))));
+            DataClass.setLastCount(DataClass.getStepCount());
+        }
     }
 
     @Override

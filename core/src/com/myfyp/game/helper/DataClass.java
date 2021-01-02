@@ -2,6 +2,7 @@ package com.myfyp.game.helper;
 
 public class DataClass {
     private static float STEP_COUNT;
+    private static float LAST_COUNT;
     private static float MONEY;
     private static float UPGRADE1_COUNT;
     private static float UPGRADE2_COUNT;
@@ -20,6 +21,14 @@ public class DataClass {
 
     public static void setStepCount(float stepCount) {
         STEP_COUNT = stepCount;
+    }
+
+    public static float getLastCount() {
+        return LAST_COUNT;
+    }
+
+    public static void setLastCount(float lastCount) {
+        LAST_COUNT = lastCount;
     }
 
     public static float getMONEY() {

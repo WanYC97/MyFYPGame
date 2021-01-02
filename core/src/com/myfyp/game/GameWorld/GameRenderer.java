@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
+import com.myfyp.game.screen.ExerciseScreen;
 import com.myfyp.game.screen.UpgradeScreen;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class GameRenderer {
     private int gameWidth;
     private int gameHeight;
     private SpriteBatch batcher;
-    private BitmapFont screenNumber, screenNumber2, screenNumber3;
+    private BitmapFont screenNumber, screenNumber2, screenNumber3, countdown;
     private GameWorld world;
     private ShapeRenderer shapeRenderer;
     private Game game;
@@ -68,11 +69,9 @@ public class GameRenderer {
 
     private ArrayList<FallingObject> fallongObjectQueue = new ArrayList<>();
     private int amountFallingObject;
-    private static int MINICOOKIE_WIDTH = 25;
-    private static int MINICOOKIE_HEIGHT = 25;
     private static float FALLINGOBJECT_THRESHOLD = -1;
-    private static float MINICOOKIE_SPEED = 0.8f;
-    private static float MINICOOKIE_ROTATION_SPEED = 0.25f;
+    private static float FALLINGOBJECT_SPEED = 0.8f;
+    private static float FALLINGOBJECT_ROTATION_SPEED = 0.25f;
 
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
@@ -104,7 +103,7 @@ public class GameRenderer {
         //Place elements on screen
         placeArrow();
         placePet();
-        placeRunButton();
+        placeUpgradeButton();
         placeResources();
         addStepCount();
         Gdx.input.setInputProcessor(stage);
@@ -161,17 +160,19 @@ public class GameRenderer {
         screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
         screenNumber2 = new BitmapFont(Gdx.files.internal("text.fnt"));
         screenNumber3 = new BitmapFont(Gdx.files.internal("text.fnt"));
+        countdown = new BitmapFont(Gdx.files.internal("text.fnt"));
+
     }
 
     private void renderFall() {
         for (FallingObject f_object : fallongObjectQueue) {
             batcher.draw(AssetLoader.fallingObject, f_object.getX(), f_object.getY(), coin.getWidth(), coin.getHeight());
-            f_object.setY(f_object.getY() - MINICOOKIE_SPEED);
+            f_object.setY(f_object.getY() - FALLINGOBJECT_SPEED);
             //f_object.setRotation((f_object.getRotation() + MINICOOKIE_ROTATION_SPEED) % 360.0f);
         }
     }
 
-    private void addCookie() {
+    private void addFallingObject() {
         //CREATE NEW OBJECT TO FALL
         if (FALLINGOBJECT_THRESHOLD == -1 || amountFallingObject <= FALLINGOBJECT_THRESHOLD) {
             fallongObjectQueue.add(new FallingObject(MathUtils.random(0, gameWidth), gameHeight, MathUtils.random(0.0f, 360.0f)));
@@ -179,7 +180,7 @@ public class GameRenderer {
         }
     }
 
-    private void placeRunButton(){
+    private void placeUpgradeButton(){
         imageRunButton.setPosition(runButton.getX(), runButton.getY());
         imageRunButton.setWidth(runButton.getWidth());
         imageRunButton.setHeight(runButton.getHeight());
@@ -225,8 +226,8 @@ public class GameRenderer {
                 }
                 else if(myVar == ScreenNo.THIRD_SCREEN){
                     //Change BG
-                    imageBall.remove();
                     myVar = ScreenNo.FIRST_SCREEN;
+                    imageBall.remove();
                 }
                 System.out.println("Left button clicked");
 
@@ -237,12 +238,12 @@ public class GameRenderer {
         a_right.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
-                    playScreen();
                     myVar = ScreenNo.THIRD_SCREEN;
+                    playScreen();
                 }
                 else if(myVar == ScreenNo.SECOND_SCREEN){
-                    imageFood.remove();
                     myVar = ScreenNo.FIRST_SCREEN;
+                    imageFood.remove();
                 }
                 else if(myVar == ScreenNo.THIRD_SCREEN){
                     //Do nothing
@@ -278,16 +279,9 @@ public class GameRenderer {
 
     private void foodScreen(){
         imageFood.setPosition( this.toy.getX(), this.toy.getY());
-        imageFood2.setPosition( this.toy.getX()-5, this.toy.getY());
-        imageFood3.setPosition( this.toy.getX()+5, this.toy.getY());
-
         imageFood.setSize(3, 3);
-        imageFood2.setSize(3, 3);
-        imageFood3.setSize(3, 3);
 
         stage.addActor(imageFood);
-        //stage.addActor(imageFood2);
-        //stage.addActor(imageFood3);
 
         actorDragAndDrop();
     }
@@ -309,63 +303,9 @@ public class GameRenderer {
                     }
                 }
             });
-/*
-            dragAndDrop.addSource(new Source(imageFood2) {
-                public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
-                    System.out.println("Drag Start");
-                    Payload payload = new Payload();
-                    payload.setObject(imageFood2);
-                    payload.setDragActor(imageFood2);
-                    return payload;
-                }
-                public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
-                    if(target == null){
-                        imageFood2.setPosition(toy.getX()-5, toy.getY());
-                    }
-                }
-            });
-
-            dragAndDrop.addSource(new Source(imageFood3) {
-                public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
-                    System.out.println("Drag Start");
-                    Payload payload = new Payload();
-                    payload.setObject(imageFood3);
-                    payload.setDragActor(imageFood3);
-                    return payload;
-                }
-                public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
-                    if(target == null){
-                        imageFood3.setPosition(toy.getX()+5, toy.getY());
-                    }
-                }
-            });
-
-            dragAndDrop.addTarget(new DragAndDrop.Target(imagePet) {
-                @Override
-                public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                    getActor().setColor(Color.GREEN);
-                    return true;
-                }
-
-                @Override
-                public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                    getActor().setColor(Color.WHITE);
-                    System.out.println("Dropped");
-                    //Play playing animation
-                    //Add fun score
-
-                    game.setScreen(new UpgradeScreen(game, stepCounter));
-                    imageFood.remove();
-                    imageFood2.remove();
-                    imageFood3.remove();
-
-                    dispose();
-                }
-            });*/
         }
 
-        else if(myVar == ScreenNo.THIRD_SCREEN){
-            //Play with pet
+        if(myVar == ScreenNo.THIRD_SCREEN){
             dragAndDrop.addSource(new Source(imageBall) {
                 public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
                     System.out.println("Drag Start");
@@ -386,19 +326,17 @@ public class GameRenderer {
                     getActor().setColor(Color.GREEN);
                     return true;
                 }
-
                 @Override
                 public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                     getActor().setColor(Color.WHITE);
                     System.out.println("Dropped");
-                    //Play playing animation
-                    //Add fun score
 
-                    game.setScreen(new UpgradeScreen(game, stepCounter));
+                    game.setScreen(new ExerciseScreen(game, stepCounter));
                     imageBall.remove();
                     dispose();
                 }
-            });        }
+            });
+        }
 
 
     }
@@ -416,10 +354,8 @@ public class GameRenderer {
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.03f,0.03f);
 
-
         screenNumber2.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber2.getData().setScale(0.03f,0.03f);
-
 
         screenNumber3.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber3.getData().setScale(0.03f,0.03f);
@@ -429,7 +365,7 @@ public class GameRenderer {
         screenNumber2.draw(batcher, Float.toString(DataClass.getMONEY()), fun.getX() +3, fun.getY());
         screenNumber3.draw(batcher, Float.toString(DataClass.getCOST()), happiness.getX() +3, happiness.getY());
 
-        addCookie();
+        addFallingObject();
         renderFall();
 
         batcher.end();

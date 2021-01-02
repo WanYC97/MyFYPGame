@@ -4,23 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.myfyp.game.GameWorld.GameWorld;
-import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
-import com.myfyp.game.screen.GameScreen;
-import java.util.GregorianCalendar;
 
-import javax.xml.crypto.Data;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class UpgradeScreen implements Screen {
+
+public class ExerciseScreen implements Screen {
 
     int runTime;
     private Skin skin;
@@ -29,19 +29,20 @@ public class UpgradeScreen implements Screen {
     private Viewport viewport;
     private Table table;
 
+    private Label countDown;
+
+    //Info about the screen size
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+    //World unit
+    float gameWidthF = 20;
+    float ppu = screenWidth/gameWidthF; // pixel per inch
+    float gameHeightF = screenHeight /ppu;
 
     private StepCounterInterface stepCounter;
 
 
-    public UpgradeScreen(final Game game, final StepCounterInterface stepCounter){
-
-        //Info about the screen size
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-        //World unit
-        float gameWidthF = 20;
-        float ppu = screenWidth/gameWidthF; // pixel per inch
-        float gameHeightF = screenHeight /ppu;
+    public ExerciseScreen(final Game game, final StepCounterInterface stepCounter){
 
         camera = new OrthographicCamera(gameWidthF, gameHeightF);
         camera.setToOrtho(false);
@@ -53,33 +54,25 @@ public class UpgradeScreen implements Screen {
         stage.addActor(table);
 
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-        TextButton upgradeButton1 = new TextButton("Upgrade 1", skin);
-        TextButton upgradeButton2 = new TextButton("Upgrade 2", skin);
+
+        Label.LabelStyle label1Style = new Label.LabelStyle();
+        BitmapFont myFont = new BitmapFont(Gdx.files.internal("text.fnt"));
+        label1Style.font = myFont;
+
+        countDown = new Label("COUNTDOWN",label1Style);
+        TextButton start = new TextButton("Start", skin);
+        TextButton Pause = new TextButton("Pause 1", skin);
+        TextButton Resume = new TextButton("Resume 2", skin);
 
         TextButton backButton = new TextButton("Back", skin);
 
-        upgradeButton1.addListener(new ChangeListener() {
+        start.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                DataClass.setUpgrade1Count(DataClass.getUpgrade1Count() + 1);
-                DataClass.setCOST(DataClass.getCOST() + (DataClass.getUpgrade1Count() * DataClass.getPRICE1()) );
-                System.out.println("UPGRADE 1 COUNT IS: " + DataClass.getUpgrade1Count());
-                System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE1());
-                System.out.println("CURRENT COST IS: " + DataClass.getCOST());
+                final Timer timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
             }
         });
-
-        upgradeButton2.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                DataClass.setUpgrade2Count(DataClass.getUpgrade2Count() + 1);
-                DataClass.setCOST(DataClass.getCOST() + (DataClass.getUpgrade2Count() * DataClass.getPRICE2()) );
-                System.out.println("UPGRADE 2 COUNT IS: " + DataClass.getUpgrade2Count());
-                System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE2());
-                System.out.println("CURRENT COST IS: " + DataClass.getCOST());
-            }
-        });
-
         backButton.setTransform(true);
         backButton.addListener(new ChangeListener() {
             @Override
@@ -89,9 +82,13 @@ public class UpgradeScreen implements Screen {
             }
         });
 
-        table.add(upgradeButton1).uniformX().getFillX();
+        table.add(countDown).uniformX().getFillX();
         table.row();
-        table.add(upgradeButton2).uniformX().getFillX();
+        table.add(start).uniformX().getFillX();
+        table.row();
+        table.add(Pause).uniformX().getFillX();
+        table.row();
+        table.add(Resume).uniformX().getFillX();
         table.row();
         table.add(backButton).pad(1).uniformX().getFillX();
 
@@ -108,6 +105,23 @@ public class UpgradeScreen implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
+
+class TimerTaskApp extends TimerTask{
+    int countdown = 100;
+
+    @Override
+    public void run() {
+        if(countdown > 0) {
+            countdown = countdown - 1;
+            String time = String.format("%02d:%02d", countdown / 60, countdown % 60);
+            System.out.println(time);
+            countDown.setText("Time left: " + time);
+        }
+        else{
+            //affection + 1
+        }
+    }
+}
 
     @Override
     public void show() {
