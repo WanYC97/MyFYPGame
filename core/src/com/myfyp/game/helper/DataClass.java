@@ -14,6 +14,24 @@ public class DataClass {
     private static float UPGRADE1_MULTIPLIER = 0.05f;
     private static float UPGRADE2_MULTIPLIER = 0.10f;
 
+    private static int REWARDS;
+    private static int AFFINITY;
+
+    public static int getREWARDS(){
+        return REWARDS;
+    }
+
+    public static int getAFFINITY(){
+        return AFFINITY;
+    }
+
+    public static void setREWARDS(int rewards){
+        REWARDS = rewards;
+    }
+
+    public static void setAFFINITY(int affinity){
+        AFFINITY = affinity;
+    }
 
     public static float getStepCount() {
         return STEP_COUNT;

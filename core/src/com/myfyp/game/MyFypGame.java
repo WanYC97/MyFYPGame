@@ -32,6 +32,8 @@ public class MyFypGame extends Game {
 		DataClass.setStepCount(preferenceManager.getFloatValue("STEP_COUNT"));
 		DataClass.setLastCount(preferenceManager.getFloatValue("STEP_COUNT"));
 		DataClass.setMONEY(preferenceManager.getFloatValue("MONEY"));
+		DataClass.setREWARDS(preferenceManager.getIntValue("REWARDS"));
+		DataClass.setAFFINITY(preferenceManager.getIntValue("AFFINITY"));
 	}
 
 	@Override
@@ -47,6 +49,8 @@ public class MyFypGame extends Game {
 		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getStepCount());
 		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getLastCount());
 		preferenceManager.setFloatValue("MONEY", DataClass.getMONEY());
+		preferenceManager.setIntValue("REWARDS", DataClass.getREWARDS());
+		preferenceManager.setIntValue("AFFINITY", DataClass.getAFFINITY());
 		super.dispose();
 	}
 

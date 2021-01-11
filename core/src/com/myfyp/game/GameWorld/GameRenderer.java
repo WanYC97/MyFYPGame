@@ -28,6 +28,8 @@ import com.myfyp.game.screen.UpgradeScreen;
 
 import java.util.ArrayList;
 
+import javax.xml.crypto.Data;
+
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
 import GameObjects.Coin;
@@ -131,6 +133,7 @@ public class GameRenderer {
         imagePet = new Image(AssetLoader.shiba);
         imageBall = new Image(AssetLoader.toy);
         imageFood = new Image(AssetLoader.food);
+        imageFood.setName("imageFoodDragAndDrop");
 
         imageFood2 = new Image(AssetLoader.food);
         imageFood3 = new Image(AssetLoader.food);
@@ -144,6 +147,9 @@ public class GameRenderer {
     }
 
     private void playAnimation(){
+        //TO DO
+        //RUN 3 TIMES WHEN INCREMENTED
+
         //if ori location, move up
         Vector2 coords = new Vector2(imagePet.getX(), imagePet.getY());
 
@@ -289,18 +295,46 @@ public class GameRenderer {
     private void actorDragAndDrop(){
         DragAndDrop dragAndDrop = new DragAndDrop();
         if(myVar == ScreenNo.SECOND_SCREEN){
-            dragAndDrop.addSource(new Source(imageFood) {
-                public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
-                    System.out.println("Drag Start");
-                    Payload payload = new Payload();
-                    payload.setObject(imageFood);
-                    payload.setDragActor(imageFood);
-                    return payload;
-                }
-                public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
-                    if(target == null){
-                        imageFood.setPosition(toy.getX(), toy.getY());
+            //IF = O then GREY
+            //IF > 0 THEN CAN DRAG
+            //ON SUCCESS, AFFINITY + 1, REWARDS -1
+
+            if(DataClass.getREWARDS() == 0) {
+                stage.getRoot().findActor("imageFoodDragAndDrop").setColor(Color.GRAY);
+            }
+            else{
+                dragAndDrop.addSource(new Source(imageFood) {
+
+                    public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
+                        System.out.println("Drag Start");
+                        Payload payload = new Payload();
+                        payload.setObject(imageFood);
+                        payload.setDragActor(imageFood);
+                        return payload;
                     }
+
+                    public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
+                        if(target == null){
+                            imageFood.setPosition(toy.getX(), toy.getY());
+                        }
+                    }
+                });
+            }
+
+            dragAndDrop.addTarget(new DragAndDrop.Target(imagePet) {
+                @Override
+                public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
+                    getActor().setColor(Color.GREEN);
+                    return true;
+                }
+                @Override
+                public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
+                    getActor().setColor(Color.WHITE);
+                    DataClass.setAFFINITY(DataClass.getAFFINITY()+1);
+                    DataClass.setREWARDS(DataClass.getREWARDS()-1);
+                    System.out.println("CURRENT AFFINITY " + DataClass.getAFFINITY());
+                    System.out.println("CURRENT REWARDS " + DataClass.getREWARDS());
+                    imageFood.setPosition(toy.getX(), toy.getY());
                 }
             });
         }
@@ -320,6 +354,7 @@ public class GameRenderer {
                     }
                 }
             });
+
             dragAndDrop.addTarget(new DragAndDrop.Target(imagePet) {
                 @Override
                 public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {

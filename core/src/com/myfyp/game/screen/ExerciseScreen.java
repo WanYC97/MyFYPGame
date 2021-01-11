@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,10 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.crypto.Data;
 
 
 public class ExerciseScreen implements Screen {
@@ -38,6 +42,10 @@ public class ExerciseScreen implements Screen {
     float gameWidthF = 20;
     float ppu = screenWidth/gameWidthF; // pixel per inch
     float gameHeightF = screenHeight /ppu;
+    Timer timer = new Timer();
+    int remainingTime;
+    boolean pauseSwitch = false;
+    boolean resumeSwitch = true;
 
     private StepCounterInterface stepCounter;
 
@@ -66,13 +74,33 @@ public class ExerciseScreen implements Screen {
 
         TextButton backButton = new TextButton("Back", skin);
 
+        //START COUNTDOWN
         start.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                final Timer timer = new Timer();
                 timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
             }
         });
+
+        //PAUSE COUNTDOWN
+        Pause.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                pauseSwitch = true;
+                resumeSwitch = false;
+            }
+        });
+
+        Resume.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                resumeSwitch = true;
+                pauseSwitch = false;
+            }
+        });
+
+
+
         backButton.setTransform(true);
         backButton.addListener(new ChangeListener() {
             @Override
@@ -108,17 +136,35 @@ public class ExerciseScreen implements Screen {
 
 class TimerTaskApp extends TimerTask{
     int countdown = 100;
+    boolean checkpoint = true;
 
     @Override
     public void run() {
-        if(countdown > 0) {
+        //food when fed, +1 to affinity
+        //food count is 0 at first
+        if(countdown > 0 && resumeSwitch) {
             countdown = countdown - 1;
+            remainingTime = countdown;
             String time = String.format("%02d:%02d", countdown / 60, countdown % 60);
             System.out.println(time);
             countDown.setText("Time left: " + time);
         }
-        else{
-            //affection + 1
+        else if(countdown > 0 && pauseSwitch) {
+            remainingTime = countdown;
+            String time = String.format("%02d:%02d", countdown / 60, countdown % 60);
+            System.out.println(time);
+            countDown.setText("Time left: " + time);
+        }
+        else if(countdown == 0){
+            //rewards + 1
+            //FIX THIS, INCREMENT EVERY SECONDS
+            if(checkpoint == true){
+                countDown.setText("WORKOUT COMPLETE!");
+                DataClass.setREWARDS(DataClass.getREWARDS() + 1);
+                System.out.println("REWARDS IS NOW " + DataClass.getREWARDS());
+                checkpoint = false;
+                //pop out dialog workout is over
+            }
         }
     }
 }

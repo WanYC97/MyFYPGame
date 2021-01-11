@@ -24,4 +24,12 @@ public class PreferenceManager {
         return preferences.getFloat(key, 0.0f);
     }
 
+    public void setIntValue(final String key, final int value){
+        preferences.putInteger(key, value);
+        preferences.flush();
+    }
+
+    public int getIntValue(final String key){
+        return preferences.getInteger(key, 0);
+    }
 }
