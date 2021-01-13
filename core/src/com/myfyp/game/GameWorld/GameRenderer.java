@@ -40,6 +40,8 @@ import GameObjects.Happiness;
 import GameObjects.Pet;
 import GameObjects.RunButton;
 import GameObjects.Toy;
+
+import static com.myfyp.game.helper.AssetLoader.background;
 import static com.myfyp.game.helper.AssetLoader.dispose;
 
 public class GameRenderer {
@@ -67,13 +69,12 @@ public class GameRenderer {
     private Coin coin;
     private Fun fun;
     private Happiness happiness;
-    public Image imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
+    public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
 
     private ArrayList<FallingObject> fallongObjectQueue = new ArrayList<>();
     private int amountFallingObject;
     private static float FALLINGOBJECT_THRESHOLD = -1;
     private static float FALLINGOBJECT_SPEED = 0.8f;
-    private static float FALLINGOBJECT_ROTATION_SPEED = 0.25f;
 
     //Set main screen as FIRST_SCREEN
     ScreenNo myVar = ScreenNo.FIRST_SCREEN;
@@ -130,6 +131,7 @@ public class GameRenderer {
 
     private void assetsInit(){
         AssetLoader.load();
+        imageBackGround = new Image(AssetLoader.background);
         imagePet = new Image(AssetLoader.shiba);
         imageBall = new Image(AssetLoader.toy);
         imageFood = new Image(AssetLoader.food);
@@ -278,14 +280,14 @@ public class GameRenderer {
 
     private void playScreen(){
         imageBall.setPosition( this.toy.getX(), this.toy.getY());
-        imageBall.setSize(3, 3);
+        imageBall.setSize(toy.getWidth(), toy.getHeight());
         stage.addActor(imageBall);
         actorDragAndDrop();
     }
 
     private void foodScreen(){
         imageFood.setPosition( this.toy.getX(), this.toy.getY());
-        imageFood.setSize(3, 3);
+        imageFood.setSize(food.getWidth(), food.getHeight());
 
         stage.addActor(imageFood);
 
@@ -386,6 +388,8 @@ public class GameRenderer {
         shapeRenderer.end();
 
         batcher.begin();
+        batcher.draw(background, 0, 0, gameWidth, gameHeight);
+
         screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         screenNumber.getData().setScale(0.03f,0.03f);
 

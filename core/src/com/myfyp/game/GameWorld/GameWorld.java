@@ -25,12 +25,12 @@ public class GameWorld {
         arrowLeft = new ArrowLeft(3, 2, 0, gameHeight/2);
         arrowRight = new ArrowRight(3, 2, gameWidth - 3,gameHeight/2);
         runButton = new RunButton(3,3, gameWidth/2 - 2, 3);
-        pet = new Pet(8, 10, gameWidth/2 - 8/2, midPointY - 10/2);
-        toy = new Toy(1, 1, gameWidth/2 - 2, 7);
-        food = new Food(2, 2, gameWidth/2 - 2, 5);
+        pet = new Pet(11, 15, gameWidth/2 - 11/2, midPointY - 15/2);
+        toy = new Toy(4, 4, gameWidth/2 - 2, 7);
+        food = new Food(6, 4, gameWidth/2 - 3, 5);
         coin = new Coin(2,2, 0,gameHeight -2);
-        fun = new Fun(2,2 , 0, gameHeight -4);
-        happiness = new Happiness(2,2 , 0, gameHeight -6);
+        fun = new Fun(2,2 , 0, gameHeight -4.5f);
+        happiness = new Happiness(2,2 , 0, gameHeight -7.0f);
     }
 
     public void update(float delta){

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import javax.xml.soap.Text;
 
 public class AssetLoader {
+    public static Texture background;
     public static Texture shiba;
     public static BitmapFont font;
     public static BitmapFont shadow;
@@ -21,6 +22,8 @@ public class AssetLoader {
     public static Texture fallingObject;
 
     public static void load(){
+        background = new Texture("background.png");
+
         shiba = new Texture(Gdx.files.internal("shiba.png"));
 
         font = new BitmapFont(Gdx.files.internal("text.fnt"));
