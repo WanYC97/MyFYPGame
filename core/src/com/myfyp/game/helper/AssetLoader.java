@@ -43,7 +43,7 @@ public class AssetLoader {
         fun = new Texture((Gdx.files.internal("fun.png")));
         happiness = new Texture((Gdx.files.internal("happiness.png")));
 
-        fallingObject = new Texture((Gdx.files.internal("coin.png")));
+        fallingObject = new Texture((Gdx.files.internal("toy.png")));
 
     }
     public static void dispose(){

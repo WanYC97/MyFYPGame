@@ -43,6 +43,7 @@ import GameObjects.Toy;
 
 import static com.myfyp.game.helper.AssetLoader.background;
 import static com.myfyp.game.helper.AssetLoader.dispose;
+import static com.myfyp.game.helper.AssetLoader.fallingObject;
 
 public class GameRenderer {
 
@@ -186,6 +187,16 @@ public class GameRenderer {
             fallongObjectQueue.add(new FallingObject(MathUtils.random(0, gameWidth), gameHeight, MathUtils.random(0.0f, 360.0f)));
             amountFallingObject++;
         }
+
+    }
+
+    private void removeFallingObject(){
+        if(fallongObjectQueue.get(0).getY() <= -gameHeight){
+            fallongObjectQueue.remove(fallongObjectQueue.get(1));
+            amountFallingObject--;
+        }
+
+        System.out.println(fallongObjectQueue.size());
     }
 
     private void placeUpgradeButton(){
@@ -406,7 +417,7 @@ public class GameRenderer {
 
         addFallingObject();
         renderFall();
-
+        removeFallingObject();
         batcher.end();
 
         playAnimation();
