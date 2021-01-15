@@ -29,6 +29,7 @@ public class GameScreen implements Screen {
     GameWorld world;
     GameRenderer renderer;
     int runTime;
+    float lastRecorded = DataClass.getStepCount();
     private Game game;
     private OrthographicCamera camera;
     private Stage stage;
@@ -72,9 +73,11 @@ public class GameScreen implements Screen {
     }
 
     private void countStep(){
+
         if(stepCounter.getCURRENT_STEP()>DataClass.getStepCount()){
-            DataClass.setStepCount(stepCounter.getCURRENT_STEP());
+            DataClass.setStepCount(DataClass.getStepCount() +(stepCounter.getCURRENT_STEP()- lastRecorded));
         }
+        lastRecorded = stepCounter.getCURRENT_STEP();
     }
 
     private void convertToMoney(){
