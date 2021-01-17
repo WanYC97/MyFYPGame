@@ -39,7 +39,7 @@ public class AssetLoader {
 
         arrowLeft = new Texture((Gdx.files.internal("arrow_left.png")));
         arrowRight = new Texture((Gdx.files.internal("arrow_right.png")));
-        runButton = new Texture((Gdx.files.internal("badlogic.jpg")));
+        runButton = new Texture((Gdx.files.internal("badlogic.png")));
 
         toy = new Texture((Gdx.files.internal("toy.png")));
         food = new Texture((Gdx.files.internal("food.png")));

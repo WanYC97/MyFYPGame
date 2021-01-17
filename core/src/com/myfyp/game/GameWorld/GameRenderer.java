@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -402,19 +403,21 @@ public class GameRenderer {
         float f2 = 1.0f;
 
         numberCoin.setColor(f2, f2, f2, 1.0f);
+        numberCoin.setUseIntegerPositions(false);
         numberCoin.getData().setScale(f,f);
 
         numberSteps.setColor(f2, f2, f2, 1.0f);
+        numberSteps.setUseIntegerPositions(false);
         numberSteps.getData().setScale(f,f);
 
         numberCost.setColor(f2, f2, f2, 1.0f);
+        numberCost.setUseIntegerPositions(false);
         numberCost.getData().setScale(f,f);
 
         //PRINT STEP COUNT,  MONEY
-        numberCoin.draw(batcher, Integer.toString((int)DataClass.getMONEY()), coin.getX() +3, coin.getY() + 1);
-        System.out.println(DataClass.getMONEY());
-        numberSteps.draw(batcher, Integer.toString((int)DataClass.getStepCount()), fun.getX() +3, fun.getY() +2);
-        numberCost.draw(batcher, Integer.toString((int)DataClass.getCOST()), happiness.getX() +3, happiness.getY() +1);
+        numberCoin.draw(batcher, Integer.toString((int)DataClass.getMONEY()), coin.getX() +4, coin.getY() +1);
+        numberSteps.draw(batcher, Integer.toString((int)DataClass.getStepCount()), fun.getX() +4, fun.getY() +1);
+        numberCost.draw(batcher, Integer.toString((int)DataClass.getCOST()), happiness.getX() +4, happiness.getY() + 1);
 
         addFallingObject();
         renderFall();

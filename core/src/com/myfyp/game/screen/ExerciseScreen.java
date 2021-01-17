@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,8 +21,6 @@ import com.myfyp.game.helper.StepCounterInterface;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.xml.crypto.Data;
 
 
 public class ExerciseScreen implements Screen {
@@ -167,7 +164,7 @@ public class ExerciseScreen implements Screen {
     }
 
 class TimerTaskApp extends TimerTask{
-    int countdown = 100;
+    int countdownTime = 100;
     boolean checkpoint = true;
 
     @Override
@@ -176,23 +173,23 @@ class TimerTaskApp extends TimerTask{
         //food count is 0 at first
         //stop switch = true
         //reset timer
-        if(countdown > 0 && stopSwitch){
+        if(countdownTime > 0 && stopSwitch){
             countDown.setText("");
         }
-        else if(countdown > 0 && resumeSwitch) {
-            countdown = countdown - 1;
-            remainingTime = countdown;
-            String time = String.format("%02d:%02d", countdown / 60, countdown % 60);
+        else if(countdownTime > 0 && resumeSwitch) {
+            countdownTime = countdownTime - 1;
+            remainingTime = countdownTime;
+            String time = String.format("%02d:%02d", countdownTime / 60, countdownTime % 60);
             System.out.println(time);
             countDown.setText("Time left: " + time);
         }
-        else if(countdown > 0 && pauseSwitch) {
-            remainingTime = countdown;
-            String time = String.format("%02d:%02d", countdown / 60, countdown % 60);
+        else if(countdownTime > 0 && pauseSwitch) {
+            remainingTime = countdownTime;
+            String time = String.format("%02d:%02d", countdownTime / 60, countdownTime % 60);
             System.out.println(time);
             countDown.setText("Time left: " + time);
         }
-        else if(countdown == 0){
+        else if(countdownTime == 0){
             //rewards + 1
             //FIX THIS, INCREMENT EVERY SECONDS
             if(checkpoint == true){
