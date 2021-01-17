@@ -8,6 +8,9 @@ import javax.xml.soap.Text;
 
 public class AssetLoader {
     public static Texture background;
+    public static Texture background_play;
+    public static Texture background_upgrade;
+
     public static Texture shiba;
     public static BitmapFont font;
     public static BitmapFont shadow;
@@ -23,6 +26,8 @@ public class AssetLoader {
 
     public static void load(){
         background = new Texture("background.png");
+        background_play = new Texture("background_play.png");
+        background_upgrade = new Texture("background_upgrade.png");
 
         shiba = new Texture(Gdx.files.internal("shiba.png"));
 

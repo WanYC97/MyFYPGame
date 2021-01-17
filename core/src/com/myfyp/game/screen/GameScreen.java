@@ -81,13 +81,15 @@ public class GameScreen implements Screen {
     }
 
     private void convertToMoney(){
-        //last base +  (new base - last base) multiply by number of upgrades * upgrade type
+        //last base +  (new base - last base) multiply by number of upgrades * upgrade type minus cost
 
         if(stepCounter.getCURRENT_STEP() != DataClass.getLastCount()) {
-            DataClass.setMONEY(DataClass.getLastCount() +
-                    ((DataClass.getStepCount() - DataClass.getLastCount())
+            DataClass.setMONEY(DataClass.getMONEY()
+                    + (DataClass.getLastCount()
+                    + ((DataClass.getStepCount() - DataClass.getLastCount())
                             * ((DataClass.getUpgrade1Count() * DataClass.getUpgrade1Multiplier())
-                            + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier()))));
+                            + (DataClass.getUpgrade2Count() * DataClass.getUpgrade2Multiplier())))
+                    - DataClass.getMONEY()) - DataClass.getCOST());
             DataClass.setLastCount(DataClass.getStepCount());
         }
     }

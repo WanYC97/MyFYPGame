@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -28,8 +29,6 @@ import com.myfyp.game.screen.UpgradeScreen;
 
 import java.util.ArrayList;
 
-import javax.xml.crypto.Data;
-
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
 import GameObjects.Coin;
@@ -43,14 +42,13 @@ import GameObjects.Toy;
 
 import static com.myfyp.game.helper.AssetLoader.background;
 import static com.myfyp.game.helper.AssetLoader.dispose;
-import static com.myfyp.game.helper.AssetLoader.fallingObject;
 
 public class GameRenderer {
 
     private int gameWidth;
     private int gameHeight;
     private SpriteBatch batcher;
-    private BitmapFont screenNumber, screenNumber2, screenNumber3, countdown;
+    private BitmapFont numberCoin, numberSteps, numberCost, countdown;
     private GameWorld world;
     private ShapeRenderer shapeRenderer;
     private Game game;
@@ -162,15 +160,14 @@ public class GameRenderer {
         else if(coords.y == pet.getY()){
             imagePet.addAction(Actions.moveTo(pet.getX(), pet.getY()+1, 0.1f));
         }
-        //if hit barrier, move down
+        //if hit barrier, mov   e down
     }
 
     private void addStepCount(){
-        screenNumber = new BitmapFont(Gdx.files.internal("text.fnt"));
-        screenNumber2 = new BitmapFont(Gdx.files.internal("text.fnt"));
-        screenNumber3 = new BitmapFont(Gdx.files.internal("text.fnt"));
+        numberCoin = new BitmapFont(Gdx.files.internal("text.fnt"));
+        numberSteps = new BitmapFont(Gdx.files.internal("text.fnt"));
+        numberCost = new BitmapFont(Gdx.files.internal("text.fnt"));
         countdown = new BitmapFont(Gdx.files.internal("text.fnt"));
-
     }
 
     private void renderFall() {
@@ -196,7 +193,7 @@ public class GameRenderer {
             amountFallingObject--;
         }
 
-        System.out.println(fallongObjectQueue.size());
+        //System.out.println(fallongObjectQueue.size());
     }
 
     private void placeUpgradeButton(){
@@ -401,19 +398,23 @@ public class GameRenderer {
         batcher.begin();
         batcher.draw(background, 0, 0, gameWidth, gameHeight);
 
-        screenNumber.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        screenNumber.getData().setScale(0.03f,0.03f);
+        float f = 0.02f;
+        float f2 = 1.0f;
 
-        screenNumber2.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        screenNumber2.getData().setScale(0.03f,0.03f);
+        numberCoin.setColor(f2, f2, f2, 1.0f);
+        numberCoin.getData().setScale(f,f);
 
-        screenNumber3.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        screenNumber3.getData().setScale(0.03f,0.03f);
+        numberSteps.setColor(f2, f2, f2, 1.0f);
+        numberSteps.getData().setScale(f,f);
+
+        numberCost.setColor(f2, f2, f2, 1.0f);
+        numberCost.getData().setScale(f,f);
 
         //PRINT STEP COUNT,  MONEY
-        screenNumber.draw(batcher, Float.toString(DataClass.getStepCount()), coin.getX() +3, coin.getY());
-        screenNumber2.draw(batcher, Float.toString(DataClass.getMONEY()), fun.getX() +3, fun.getY());
-        screenNumber3.draw(batcher, Float.toString(DataClass.getCOST()), happiness.getX() +3, happiness.getY());
+        numberCoin.draw(batcher, Integer.toString((int)DataClass.getMONEY()), coin.getX() +3, coin.getY() + 1);
+        System.out.println(DataClass.getMONEY());
+        numberSteps.draw(batcher, Integer.toString((int)DataClass.getStepCount()), fun.getX() +3, fun.getY() +2);
+        numberCost.draw(batcher, Integer.toString((int)DataClass.getCOST()), happiness.getX() +3, happiness.getY() +1);
 
         addFallingObject();
         renderFall();

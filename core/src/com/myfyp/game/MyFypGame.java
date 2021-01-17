@@ -15,7 +15,6 @@ public class MyFypGame extends Game {
 	private final StepCounterInterface stepCounter;
 	PreferenceManager preferenceManager;
 
-
 	public MyFypGame(StepCounterInterface stepCounter){
 		game = this;
 		this.stepCounter = stepCounter;

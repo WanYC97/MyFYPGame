@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.myfyp.game.helper.AssetLoader;
 import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.StepCounterInterface;
 
@@ -35,6 +37,8 @@ public class ExerciseScreen implements Screen {
 
     private Label countDown;
 
+    private Image imageBackGround;
+
     //Info about the screen size
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
@@ -46,6 +50,8 @@ public class ExerciseScreen implements Screen {
     int remainingTime;
     boolean pauseSwitch = false;
     boolean resumeSwitch = true;
+    boolean stopSwitch = false;
+    boolean permanentSwitch = false;
 
     private StepCounterInterface stepCounter;
 
@@ -57,8 +63,13 @@ public class ExerciseScreen implements Screen {
         viewport = new FitViewport(camera.viewportWidth, camera.viewportHeight, camera);
         stage = new Stage(viewport);
 
+        imageBackGround = new Image(AssetLoader.background_play);
+
         table = new Table();
         table.setFillParent(true);
+        stage.addActor(imageBackGround);
+        imageBackGround.setPosition(0, 0);
+        imageBackGround.setSize(screenWidth, screenHeight);
         stage.addActor(table);
 
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
@@ -69,8 +80,9 @@ public class ExerciseScreen implements Screen {
 
         countDown = new Label("COUNTDOWN",label1Style);
         TextButton start = new TextButton("Start", skin);
-        TextButton Pause = new TextButton("Pause 1", skin);
-        TextButton Resume = new TextButton("Resume 2", skin);
+        TextButton pause = new TextButton("Pause 1", skin);
+        TextButton resume = new TextButton("Resume 2", skin);
+        TextButton stop = new TextButton("Stop", skin);
 
         TextButton backButton = new TextButton("Back", skin);
 
@@ -78,12 +90,19 @@ public class ExerciseScreen implements Screen {
         start.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
+                stopSwitch = false;
+                if(permanentSwitch = true){
+                    Timer timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
+                }
+                else{
+                    timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
+                }
             }
         });
 
         //PAUSE COUNTDOWN
-        Pause.addListener(new ChangeListener() {
+        pause.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 pauseSwitch = true;
@@ -91,7 +110,7 @@ public class ExerciseScreen implements Screen {
             }
         });
 
-        Resume.addListener(new ChangeListener() {
+        resume.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 resumeSwitch = true;
@@ -99,26 +118,39 @@ public class ExerciseScreen implements Screen {
             }
         });
 
-
+        stop.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                timer.purge();
+                stopSwitch = true;
+                permanentSwitch = true;
+            }
+        });
 
         backButton.setTransform(true);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new GameScreen(game, stepCounter));
+                timer.cancel();
+                timer.purge();
                 dispose();
             }
         });
 
-        table.add(countDown).uniformX().getFillX();
+        int padding = 20;
+
+        table.add(countDown).space(padding).uniformX().getFillX();
         table.row();
-        table.add(start).uniformX().getFillX();
+        table.add(start).space(padding).uniformX().getFillX();
         table.row();
-        table.add(Pause).uniformX().getFillX();
+        table.add(pause).space(padding).uniformX().getFillX();
         table.row();
-        table.add(Resume).uniformX().getFillX();
+        table.add(resume).space(padding).uniformX().getFillX();
         table.row();
-        table.add(backButton).pad(1).uniformX().getFillX();
+        table.add(stop).space(padding).uniformX().getFillX();
+        table.row();
+        table.add(backButton).space(padding).uniformX().getFillX();
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -142,7 +174,12 @@ class TimerTaskApp extends TimerTask{
     public void run() {
         //food when fed, +1 to affinity
         //food count is 0 at first
-        if(countdown > 0 && resumeSwitch) {
+        //stop switch = true
+        //reset timer
+        if(countdown > 0 && stopSwitch){
+            countDown.setText("");
+        }
+        else if(countdown > 0 && resumeSwitch) {
             countdown = countdown - 1;
             remainingTime = countdown;
             String time = String.format("%02d:%02d", countdown / 60, countdown % 60);
