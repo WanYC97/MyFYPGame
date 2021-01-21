@@ -16,7 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -29,6 +31,8 @@ import com.myfyp.game.screen.ExerciseScreen;
 import com.myfyp.game.screen.UpgradeScreen;
 
 import java.util.ArrayList;
+
+import javax.xml.crypto.Data;
 
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
@@ -71,6 +75,8 @@ public class GameRenderer {
     private Happiness happiness;
     public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
 
+    private float fallCheck = DataClass.getStepCount();
+    private float moneyCheck = DataClass.getMONEY();
     private ArrayList<FallingObject> fallongObjectQueue = new ArrayList<>();
     private int amountFallingObject;
     private static float FALLINGOBJECT_THRESHOLD = -1;
@@ -117,6 +123,23 @@ public class GameRenderer {
         shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
+    public static class InteractDialog extends Dialog {
+
+        public InteractDialog(String title, Skin skin) {
+            super(title, skin);
+        }
+
+        {
+            text("WOOF WOOF").setColor(Color.SALMON);
+            button ("AFFINITY +1", ":D");
+        }
+
+        @Override
+        protected void result(Object object){
+        }
+
+    }
+
     private void gameObjectsInit(){
         pet = world.getPet();
         toy = world.getToy();
@@ -149,20 +172,21 @@ public class GameRenderer {
     }
 
     private void playAnimation(){
-        //TO DO
         //RUN 3 TIMES WHEN INCREMENTED
 
         //if ori location, move up
+
         Vector2 coords = new Vector2(imagePet.getX(), imagePet.getY());
 
         if(coords.y >= pet.getY()+1){
             imagePet.addAction(Actions.moveTo(pet.getX(), pet.getY(), 0.1f));
         }
-        else if(coords.y == pet.getY()){
+        if(coords.y == pet.getY()){
             imagePet.addAction(Actions.moveTo(pet.getX(), pet.getY()+1, 0.1f));
         }
         //if hit barrier, mov   e down
     }
+
 
     private void addStepCount(){
         numberCoin = new BitmapFont(Gdx.files.internal("text.fnt"));
@@ -218,6 +242,12 @@ public class GameRenderer {
         imagePet.setWidth(pet.getWidth());
         imagePet.setHeight(pet.getHeight());
         stage.addActor(imagePet);
+
+        imagePet.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                DataClass.setMONEY(DataClass.getMONEY() + 1);
+            }
+        });
     }
 
     private void placeArrow(){
@@ -346,7 +376,14 @@ public class GameRenderer {
                     System.out.println("CURRENT AFFINITY " + DataClass.getAFFINITY());
                     System.out.println("CURRENT REWARDS " + DataClass.getREWARDS());
                     imageFood.setPosition(toy.getX(), toy.getY());
+
+                    Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+                    InteractDialog dia = new InteractDialog("", skin);
+                    dia.show(stage);
+                    dia.setOrigin(gameWidth/2 - 3, gameHeight/2 -2);
+                    dia.setScale(0.02f);
                 }
+
             });
         }
 
@@ -417,15 +454,14 @@ public class GameRenderer {
         //PRINT STEP COUNT,  MONEY
         numberCoin.draw(batcher, Integer.toString((int)DataClass.getMONEY()), coin.getX() +4, coin.getY() +1);
         numberSteps.draw(batcher, Integer.toString((int)DataClass.getStepCount()), fun.getX() +4, fun.getY() +1);
-        numberCost.draw(batcher, Integer.toString((int)DataClass.getCOST()), happiness.getX() +4, happiness.getY() + 1);
+        numberCost.draw(batcher, Integer.toString((int)DataClass.getAFFINITY()), happiness.getX() +4, happiness.getY() + 1);
 
         addFallingObject();
         renderFall();
         removeFallingObject();
-        batcher.end();
-
         playAnimation();
 
+        batcher.end();
         stage.act();
         stage.draw();
     }

@@ -41,7 +41,7 @@ public class UpgradeScreen implements Screen {
     private TextButton upgradeButton1, upgradeButton2, backButton;
     private StepCounterInterface stepCounter;
     PreferenceManager preferenceManager;
-    private Image imageBackGround;
+    private Image imageBackGround, upgrade1, upgrade2;
 
 
     public UpgradeScreen(final Game game, final StepCounterInterface stepCounter){
@@ -55,6 +55,8 @@ public class UpgradeScreen implements Screen {
         float gameHeightF = screenHeight /ppu;
 
         imageBackGround = new Image(AssetLoader.background_upgrade);
+        upgrade1 = new Image(AssetLoader.upgrade1);
+        upgrade2 = new Image(AssetLoader.upgrade2);
 
         camera = new OrthographicCamera(gameWidthF, gameHeightF);
         camera.setToOrtho(false);
@@ -67,6 +69,7 @@ public class UpgradeScreen implements Screen {
 
         table = new Table();
         table.setFillParent(true);
+        table.pad(10);
         stage.addActor(table);
 
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
@@ -141,18 +144,22 @@ public class UpgradeScreen implements Screen {
                 }
             }
         });
-        table.add(textUpgrade1).uniformX().getFillX();
+        table.add(upgrade1).maxSize(screenWidth/10, screenWidth/10);
+        table.add(textUpgrade1).getFillX();
         table.add(upgradeButton1).right().uniformX().getFillX();
         table.row();
-        table.add(textCount1).uniformX().getFillX();
+
+        table.add(textCount1).right().colspan(2);
         table.row();
+
+        table.add(upgrade2).maxSize(screenWidth/10, screenWidth/10);;
         table.add(textUpgrade2).uniformX().getFillX();
         table.add(upgradeButton2).right().uniformX().getFillX();
         table.row();
-        table.add(textCount2).uniformX().getFillX();
+
+        table.add(textCount2).right().colspan(2);
         table.row();
-        table.debug();
-        table.add(backButton).right().pad(1).colspan(2).uniformX().getFillX();
+        table.add(backButton).right().pad(1).colspan(3).uniformX().getFillX();
 
         Gdx.input.setInputProcessor(stage);
     }

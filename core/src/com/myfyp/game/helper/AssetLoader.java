@@ -23,6 +23,8 @@ public class AssetLoader {
     public static Texture fun;
     public static Texture happiness;
     public static Texture fallingObject;
+    public static Texture upgrade1;
+    public static Texture upgrade2;
 
     public static void load(){
         background = new Texture("background.png");
@@ -39,7 +41,7 @@ public class AssetLoader {
 
         arrowLeft = new Texture((Gdx.files.internal("arrow_left.png")));
         arrowRight = new Texture((Gdx.files.internal("arrow_right.png")));
-        runButton = new Texture((Gdx.files.internal("badlogic.png")));
+        runButton = new Texture((Gdx.files.internal("Rocket-PNG-Clipart.png")));
 
         toy = new Texture((Gdx.files.internal("toy.png")));
         food = new Texture((Gdx.files.internal("food.png")));
@@ -49,6 +51,9 @@ public class AssetLoader {
         happiness = new Texture((Gdx.files.internal("happiness.png")));
 
         fallingObject = new Texture((Gdx.files.internal("toy.png")));
+
+        upgrade1 = new Texture((Gdx.files.internal("ball1.png")));
+        upgrade2 = new Texture((Gdx.files.internal("ball2.png")));
 
     }
     public static void dispose(){
