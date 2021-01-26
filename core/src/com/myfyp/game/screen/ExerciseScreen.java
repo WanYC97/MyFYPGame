@@ -44,6 +44,7 @@ public class ExerciseScreen implements Screen {
     float ppu = screenWidth/gameWidthF; // pixel per inch
     float gameHeightF = screenHeight /ppu;
     Timer timer = new Timer();
+    TimerTask task = new TimerTaskApp();
     int remainingTime;
     boolean pauseSwitch = false;
     boolean resumeSwitch = true;
@@ -90,10 +91,11 @@ public class ExerciseScreen implements Screen {
                 stopSwitch = false;
                 if(permanentSwitch = true){
                     Timer timer = new Timer();
-                    timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
+                    TimerTask task = new TimerTaskApp();
+                    timer.scheduleAtFixedRate(task, 0, 1000);
                 }
-                else{
-                    timer.scheduleAtFixedRate(new TimerTaskApp(), 0, 1000);
+                else if(permanentSwitch = false){
+                    timer.scheduleAtFixedRate(task, 0, 1000);
                 }
             }
         });
@@ -118,6 +120,8 @@ public class ExerciseScreen implements Screen {
         stop.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                task.cancel();
+                timer.cancel();
                 timer.purge();
                 stopSwitch = true;
                 permanentSwitch = true;
@@ -129,6 +133,7 @@ public class ExerciseScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new GameScreen(game, stepCounter));
+                task.cancel();
                 timer.cancel();
                 timer.purge();
                 dispose();

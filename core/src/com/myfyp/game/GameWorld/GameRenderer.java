@@ -6,10 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -32,8 +30,6 @@ import com.myfyp.game.screen.UpgradeScreen;
 
 import java.util.ArrayList;
 
-import javax.xml.crypto.Data;
-
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
 import GameObjects.Coin;
@@ -53,7 +49,7 @@ public class GameRenderer {
     private int gameWidth;
     private int gameHeight;
     private SpriteBatch batcher;
-    private BitmapFont numberCoin, numberSteps, numberCost, countdown;
+    private BitmapFont numberCoin, numberSteps, numberCost, countdown, labelUpgrade, labelBall, labelFood;
     private GameWorld world;
     private ShapeRenderer shapeRenderer;
     private Game game;
@@ -69,11 +65,11 @@ public class GameRenderer {
     private Food food;
     private ArrowLeft arrowLeft;
     private ArrowRight arrowRight;
-    private RunButton runButton;
+    private RunButton upgradeButton;
     private Coin coin;
     private Fun fun;
     private Happiness happiness;
-    public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageRunButton, imageFood, imageFood2, imageFood3, imageCoin, imageFun, imageHappiness;
+    public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageUpgradeButton, imageFood, imageCoin, imageFun, imageHappiness;
 
     private float fallCheck = DataClass.getStepCount();
     private float moneyCheck = DataClass.getMONEY();
@@ -146,7 +142,7 @@ public class GameRenderer {
         food = world.getFood();
         arrowLeft = world.getArrowLeft();
         arrowRight = world.getArrowRight();
-        runButton = world.getRunButton();
+        upgradeButton = world.getRunButton();
         coin = world.getCoin();
         fun = world.getFun();
         happiness = world.getHappiness();
@@ -160,12 +156,9 @@ public class GameRenderer {
         imageFood = new Image(AssetLoader.food);
         imageFood.setName("imageFoodDragAndDrop");
 
-        imageFood2 = new Image(AssetLoader.food);
-        imageFood3 = new Image(AssetLoader.food);
-
         a_left = new Image(AssetLoader.arrowLeft);
         a_right = new Image(AssetLoader.arrowRight);
-        imageRunButton = new Image(AssetLoader.runButton);
+        imageUpgradeButton = new Image(AssetLoader.runButton);
         imageCoin = new Image(AssetLoader.coin);
         imageFun = new Image(AssetLoader.fun);
         imageHappiness = new Image(AssetLoader.happiness);
@@ -193,6 +186,10 @@ public class GameRenderer {
         numberSteps = new BitmapFont(Gdx.files.internal("text.fnt"));
         numberCost = new BitmapFont(Gdx.files.internal("text.fnt"));
         countdown = new BitmapFont(Gdx.files.internal("text.fnt"));
+
+        labelBall = new BitmapFont(Gdx.files.internal("text.fnt"));
+        labelFood = new BitmapFont(Gdx.files.internal("text.fnt"));
+        labelUpgrade = new BitmapFont(Gdx.files.internal("text.fnt"));
     }
 
     private void renderFall() {
@@ -222,12 +219,12 @@ public class GameRenderer {
     }
 
     private void placeUpgradeButton(){
-        imageRunButton.setPosition(runButton.getX(), runButton.getY());
-        imageRunButton.setWidth(runButton.getWidth());
-        imageRunButton.setHeight(runButton.getHeight());
-        stage.addActor(imageRunButton);
+        imageUpgradeButton.setPosition(upgradeButton.getX(), upgradeButton.getY());
+        imageUpgradeButton.setWidth(upgradeButton.getWidth());
+        imageUpgradeButton.setHeight(upgradeButton.getHeight());
+        stage.addActor(imageUpgradeButton);
 
-        imageRunButton.addListener(new ClickListener(){
+        imageUpgradeButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
                     game.setScreen(new UpgradeScreen(game, stepCounter));
@@ -325,7 +322,8 @@ public class GameRenderer {
     }
 
     private void foodScreen(){
-        imageFood.setPosition( this.toy.getX(), this.toy.getY());
+
+        imageFood.setPosition( this.food.getX(), this.food.getY());
         imageFood.setSize(food.getWidth(), food.getHeight());
 
         stage.addActor(imageFood);
@@ -451,10 +449,37 @@ public class GameRenderer {
         numberCost.setUseIntegerPositions(false);
         numberCost.getData().setScale(f,f);
 
+        labelUpgrade.setColor(f2, f2, f2, 1.0f);
+        labelUpgrade.setUseIntegerPositions(false);
+        labelUpgrade.getData().setScale(f,f);
+
+        labelBall.setColor(f2, f2, f2, 1.0f);
+        labelBall.setUseIntegerPositions(false);
+        labelBall.getData().setScale(f,f);
+
+        labelFood.setColor(f2, f2, f2, 1.0f);
+        labelFood.setUseIntegerPositions(false);
+        labelFood.getData().setScale(f,f);
+
+
         //PRINT STEP COUNT,  MONEY
         numberCoin.draw(batcher, Integer.toString((int)DataClass.getMONEY()), coin.getX() +4, coin.getY() +1);
         numberSteps.draw(batcher, Integer.toString((int)DataClass.getStepCount()), fun.getX() +4, fun.getY() +1);
         numberCost.draw(batcher, Integer.toString((int)DataClass.getAFFINITY()), happiness.getX() +4, happiness.getY() + 1);
+
+        labelUpgrade.draw(batcher, "UPGRADE", upgradeButton.getX() -1, upgradeButton.getY() -1);
+
+        if(myVar == ScreenNo.SECOND_SCREEN){
+            //food screen
+            labelFood.draw(batcher, "TREAT", food.getX() +1, food.getY() -1);
+        }
+
+        if(myVar == ScreenNo.THIRD_SCREEN){
+            //food screen
+            labelBall.draw(batcher, "PLAY", imageBall.getX(), imageBall.getY() -1);
+        }
+
+
 
         addFallingObject();
         renderFall();
