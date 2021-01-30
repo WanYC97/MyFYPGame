@@ -25,6 +25,7 @@ public class AssetLoader {
     public static Texture fallingObject;
     public static Texture upgrade1;
     public static Texture upgrade2;
+    public static Texture upgrade3;
 
     public static void load(){
         background = new Texture("background.png");
@@ -54,6 +55,7 @@ public class AssetLoader {
 
         upgrade1 = new Texture((Gdx.files.internal("ball1.png")));
         upgrade2 = new Texture((Gdx.files.internal("ball2.png")));
+        upgrade3 = new Texture((Gdx.files.internal("ball3.png")));
 
     }
     public static void dispose(){

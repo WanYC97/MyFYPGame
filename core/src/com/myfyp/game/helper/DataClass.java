@@ -6,13 +6,17 @@ public class DataClass {
     private static float MONEY;
     private static float UPGRADE1_COUNT;
     private static float UPGRADE2_COUNT;
+    private static float UPGRADE3_COUNT;
     private static float COST;
 
     //FIXED VALUE FOR NOW
     private static float PRICE1 = 100;
     private static float PRICE2 = 300;
-    private static float UPGRADE1_MULTIPLIER = 0.05f;
-    private static float UPGRADE2_MULTIPLIER = 0.10f;
+    private static float PRICE3 = 1000;
+    private static float UPGRADE1_MULTIPLIER = 0.20f;
+    private static float UPGRADE2_MULTIPLIER = 0.50f;
+    private static float UPGRADE3_MULTIPLIER = 1.50f;
+
 
     private static int REWARDS;
     private static int AFFINITY;
@@ -73,6 +77,15 @@ public class DataClass {
         UPGRADE2_COUNT = upgrade2Count;
     }
 
+    public static float getUpgrade3Count() {
+        return UPGRADE3_COUNT;
+    }
+
+    public static void setUpgrade3Count(float upgrade3Count) {
+        UPGRADE3_COUNT = upgrade3Count;
+    }
+
+
     public static float getCOST() {
         return COST;
     }
@@ -97,6 +110,14 @@ public class DataClass {
         DataClass.PRICE2 = PRICE2;
     }
 
+    public static float getPRICE3() {
+        return PRICE3;
+    }
+
+    public static void setPRICE3(float PRICE3) {
+        DataClass.PRICE3 = PRICE3;
+    }
+
     //METHOD FOR FIXED VALUE BELOW
 
     public static float getUpgrade1Multiplier() {
@@ -113,6 +134,14 @@ public class DataClass {
 
     public static void setUpgrade2Multiplier(float upgrade2Multiplier) {
         UPGRADE2_MULTIPLIER = upgrade2Multiplier;
+    }
+
+    public static float getUpgrade3Multiplier() {
+        return UPGRADE3_MULTIPLIER;
+    }
+
+    public static void setUpgrade3Multiplier(float upgrade3Multiplier) {
+        UPGRADE2_MULTIPLIER = upgrade3Multiplier;
     }
 
 }

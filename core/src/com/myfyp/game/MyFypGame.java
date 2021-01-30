@@ -28,6 +28,7 @@ public class MyFypGame extends Game {
 		//LOAD DATA, DEFAULT VALUE IS ZERO
 		DataClass.setUpgrade1Count(preferenceManager.getFloatValue("UPGRADE1"));
 		DataClass.setUpgrade2Count(preferenceManager.getFloatValue("UPGRADE2"));
+		DataClass.setUpgrade2Count(preferenceManager.getFloatValue("UPGRADE3"));
 		DataClass.setStepCount(preferenceManager.getFloatValue("STEP_COUNT"));
 		DataClass.setLastCount(preferenceManager.getFloatValue("STEP_COUNT"));
 		DataClass.setMONEY(preferenceManager.getFloatValue("MONEY"));
@@ -45,6 +46,7 @@ public class MyFypGame extends Game {
 		//SAVE DATA
 		preferenceManager.setFloatValue("UPGRADE1", DataClass.getUpgrade1Count());
 		preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade2Count());
+		preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade3Count());
 		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getStepCount());
 		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getLastCount());
 		preferenceManager.setFloatValue("MONEY", DataClass.getMONEY());

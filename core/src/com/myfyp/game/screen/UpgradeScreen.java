@@ -16,16 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.myfyp.game.GameWorld.GameWorld;
 import com.myfyp.game.helper.AssetLoader;
 import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.PreferenceManager;
 import com.myfyp.game.helper.StepCounterInterface;
-import com.myfyp.game.screen.GameScreen;
-import java.util.GregorianCalendar;
-
-import javax.xml.crypto.Data;
-import javax.xml.soap.Text;
 
 public class UpgradeScreen implements Screen {
 
@@ -36,12 +30,12 @@ public class UpgradeScreen implements Screen {
     private Viewport viewport;
     private Table table;
 
-    private Label textUpgrade1, textUpgrade2, textCount1, textPrice1, textCount2, textPrice2;
-    private String textUpgradeCount1, textUpgradePrice1, textUpgradeCount2, textUpgradePrice2;
-    private TextButton upgradeButton1, upgradeButton2, backButton;
+    private Label textUpgrade1, textUpgrade2,textUpgrade3, textCount1, textCount2, textCount3;
+    private String textUpgradeCount1, textUpgradePrice1, textUpgradeCount2, textUpgradePrice2, textUpgradeCount3, textUpgradePrice3;
+    private TextButton upgradeButton1, upgradeButton2,upgradeButton3, backButton;
     private StepCounterInterface stepCounter;
     PreferenceManager preferenceManager;
-    private Image imageBackGround, upgrade1, upgrade2;
+    private Image imageBackGround, imgUpgrade1, imgUpgrade2, imgUpgrade3;
 
 
     public UpgradeScreen(final Game game, final StepCounterInterface stepCounter){
@@ -55,8 +49,9 @@ public class UpgradeScreen implements Screen {
         float gameHeightF = screenHeight /ppu;
 
         imageBackGround = new Image(AssetLoader.background_upgrade);
-        upgrade1 = new Image(AssetLoader.upgrade1);
-        upgrade2 = new Image(AssetLoader.upgrade2);
+        imgUpgrade1 = new Image(AssetLoader.upgrade1);
+        imgUpgrade2 = new Image(AssetLoader.upgrade2);
+        imgUpgrade3 = new Image(AssetLoader.upgrade3);
 
         camera = new OrthographicCamera(gameWidthF, gameHeightF);
         camera.setToOrtho(false);
@@ -83,14 +78,19 @@ public class UpgradeScreen implements Screen {
         textUpgradePrice1 = Float.toString(DataClass.getPRICE1());
         textUpgradeCount2 = Float.toString(DataClass.getUpgrade2Count());
         textUpgradePrice2 = Float.toString(DataClass.getPRICE2());
+        textUpgradeCount3 = Float.toString(DataClass.getUpgrade3Count());
+        textUpgradePrice3 = Float.toString(DataClass.getPRICE3());
 
         upgradeButton1 = new TextButton("BUY", skin);
         upgradeButton2 = new TextButton("BUY", skin);
+        upgradeButton3 = new TextButton("BUY", skin);
         backButton = new TextButton("Back", skin);
         textUpgrade1 = new Label("UPGRADE 1",label1Style);
         textCount1 = new Label("Count: " + DataClass.getUpgrade1Count(), label1Style);
         textUpgrade2 = new Label("UPGRADE 2",label1Style);
         textCount2 = new Label("Count: " + DataClass.getUpgrade2Count(), label1Style);
+        textUpgrade3 = new Label("UPGRADE 3",label1Style);
+        textCount3 = new Label("Count: " + DataClass.getUpgrade3Count(), label1Style);
 
         backButton.setTransform(true);
         backButton.addListener(new ChangeListener() {
@@ -144,7 +144,30 @@ public class UpgradeScreen implements Screen {
                 }
             }
         });
-        table.add(upgrade1).maxSize(screenWidth/10, screenWidth/10);
+
+        upgradeButton3.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if(DataClass.getPRICE3() > DataClass.getMONEY()){
+                    System.out.println("Not enough money for upgrade 2");
+                }
+                else{
+                    DataClass.setUpgrade3Count(DataClass.getUpgrade3Count() + 1);
+                    DataClass.setCOST(DataClass.getCOST() + (1 * DataClass.getPRICE3()) );
+                    DataClass.setMONEY(DataClass.getMONEY() - DataClass.getPRICE3());
+
+                    textCount2.setText("Count: " + DataClass.getUpgrade3Count());
+
+                    System.out.println("UPGRADE 2 COUNT IS: " + DataClass.getUpgrade3Count());
+                    System.out.println("CURRENT PRICE IS: " + DataClass.getPRICE3());
+                    System.out.println("CURRENT CASH IS: " + DataClass.getMONEY());
+
+                }
+            }
+        });
+
+        table.add(imgUpgrade1).maxSize(screenWidth/10, screenWidth/10);
         table.add(textUpgrade1).getFillX();
         table.add(upgradeButton1).right().uniformX().getFillX();
         table.row();
@@ -152,13 +175,22 @@ public class UpgradeScreen implements Screen {
         table.add(textCount1).right().colspan(2);
         table.row();
 
-        table.add(upgrade2).maxSize(screenWidth/10, screenWidth/10);;
+        table.add(imgUpgrade2).maxSize(screenWidth/10, screenWidth/10);;
         table.add(textUpgrade2).uniformX().getFillX();
         table.add(upgradeButton2).right().uniformX().getFillX();
         table.row();
 
         table.add(textCount2).right().colspan(2);
         table.row();
+
+        table.add(imgUpgrade3).maxSize(screenWidth/10, screenWidth/10);;
+        table.add(textUpgrade3).uniformX().getFillX();
+        table.add(upgradeButton3).right().uniformX().getFillX();
+        table.row();
+
+        table.add(textCount3).right().colspan(2);
+        table.row();
+        
         table.add(backButton).right().pad(1).colspan(3).uniformX().getFillX();
 
         Gdx.input.setInputProcessor(stage);
@@ -174,18 +206,25 @@ public class UpgradeScreen implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
 
-
-        if(DataClass.getPRICE1() > DataClass.getMONEY() && DataClass.getPRICE2() > DataClass.getMONEY()){
+        if(DataClass.getPRICE1() > DataClass.getMONEY()){
             upgradeButton1.setColor(Color.DARK_GRAY);
-        }
-        else if(DataClass.getPRICE2() > DataClass.getMONEY()){
-            upgradeButton2.setColor(Color.DARK_GRAY);
         }
         else{
             upgradeButton1.setColor(Color.GOLD);
-            upgradeButton2.setColor(Color.GOLD);
-
         }
+        if(DataClass.getPRICE2() > DataClass.getMONEY()){
+            upgradeButton2.setColor(Color.DARK_GRAY);
+        }
+        else{
+            upgradeButton2.setColor(Color.GOLD);
+        }
+        if(DataClass.getPRICE3() > DataClass.getMONEY()){
+            upgradeButton3.setColor(Color.DARK_GRAY);
+        }
+        else{
+            upgradeButton3.setColor(Color.GOLD);
+        }
+
     }
 
     @Override
