@@ -3,6 +3,8 @@ package com.myfyp.game.GameWorld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,6 +31,8 @@ import com.myfyp.game.screen.ExerciseScreen;
 import com.myfyp.game.screen.UpgradeScreen;
 
 import java.util.ArrayList;
+
+import javax.xml.crypto.Data;
 
 import GameObjects.ArrowLeft;
 import GameObjects.ArrowRight;
@@ -70,6 +74,8 @@ public class GameRenderer {
     private Fun fun;
     private Happiness happiness;
     public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageUpgradeButton, imageFood, imageCoin, imageFun, imageHappiness;
+    private Music menuMusic;
+    private Sound woofSound;
 
     private float fallCheck = DataClass.getStepCount();
     private float moneyCheck = DataClass.getMONEY();
@@ -104,6 +110,7 @@ public class GameRenderer {
 
         gameObjectsInit();
         assetsInit();
+        musicInit();
 
         //Place elements on screen
         placeArrow();
@@ -162,6 +169,13 @@ public class GameRenderer {
         imageCoin = new Image(AssetLoader.coin);
         imageFun = new Image(AssetLoader.fun);
         imageHappiness = new Image(AssetLoader.happiness);
+    }
+
+    private void musicInit(){
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Netherplace_Looping.mp3"));
+        woofSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pup2.mp3"));
+        menuMusic.setLooping(true);
+        menuMusic.play();
     }
 
     private void playAnimation(){
@@ -228,6 +242,7 @@ public class GameRenderer {
             public void clicked(InputEvent event, float x, float y){
                 if(myVar == ScreenNo.FIRST_SCREEN){
                     game.setScreen(new UpgradeScreen(game, stepCounter));
+                    menuMusic.dispose();
                     dispose();
                 }
             }
@@ -332,16 +347,17 @@ public class GameRenderer {
     }
 
     private void actorDragAndDrop(){
-        DragAndDrop dragAndDrop = new DragAndDrop();
+        final DragAndDrop dragAndDrop = new DragAndDrop();
         if(myVar == ScreenNo.SECOND_SCREEN){
             //IF = O then GREY
             //IF > 0 THEN CAN DRAG
             //ON SUCCESS, AFFINITY + 1, REWARDS -1
 
-            if(DataClass.getREWARDS() == 0) {
+            if(DataClass.getREWARDS() <= 0) {
                 stage.getRoot().findActor("imageFoodDragAndDrop").setColor(Color.GRAY);
             }
             else{
+                imageFood.setColor(Color.WHITE);
                 dragAndDrop.addSource(new Source(imageFood) {
 
                     public DragAndDrop.Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -355,6 +371,7 @@ public class GameRenderer {
                     public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
                         if(target == null){
                             imageFood.setPosition(toy.getX(), toy.getY());
+                            imageFood.setColor(Color.WHITE);
                         }
                     }
                 });
@@ -368,9 +385,11 @@ public class GameRenderer {
                 }
                 @Override
                 public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
+                    woofSound.play();
                     getActor().setColor(Color.WHITE);
                     DataClass.setAFFINITY(DataClass.getAFFINITY()+1);
                     DataClass.setREWARDS(DataClass.getREWARDS()-1);
+
                     System.out.println("CURRENT AFFINITY " + DataClass.getAFFINITY());
                     System.out.println("CURRENT REWARDS " + DataClass.getREWARDS());
                     imageFood.setPosition(toy.getX(), toy.getY());
@@ -380,6 +399,10 @@ public class GameRenderer {
                     dia.show(stage);
                     dia.setOrigin(gameWidth/2 - 3, gameHeight/2 -2);
                     dia.setScale(0.02f);
+                    if(DataClass.getREWARDS() ==0){
+                        dragAndDrop.clear();
+                        imageFood.setColor(Color.GRAY);
+                    }
                 }
 
             });
@@ -397,6 +420,7 @@ public class GameRenderer {
                 public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target){
                     if(target == null){
                         imageBall.setPosition(toy.getX(), toy.getY());
+                        imageBall.setColor(Color.WHITE);
                     }
                 }
             });
@@ -413,6 +437,7 @@ public class GameRenderer {
                     System.out.println("Dropped");
 
                     game.setScreen(new ExerciseScreen(game, stepCounter));
+                    menuMusic.dispose();
                     imageBall.remove();
                     dispose();
                 }
@@ -472,7 +497,9 @@ public class GameRenderer {
         if(myVar == ScreenNo.SECOND_SCREEN){
             //food screen
             labelFood.draw(batcher, "TREAT", food.getX() +1, food.getY() -1);
+
         }
+
 
         if(myVar == ScreenNo.THIRD_SCREEN){
             //food screen

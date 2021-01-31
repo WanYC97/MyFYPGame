@@ -22,8 +22,8 @@ public class GameWorld {
     private Happiness happiness;
 
     public GameWorld(int gameWidth, int gameHeight, int midPointY){
-        arrowLeft = new ArrowLeft(3, 2, 0, gameHeight/2);
-        arrowRight = new ArrowRight(3, 2, gameWidth - 3,gameHeight/2);
+        arrowLeft = new ArrowLeft(2, 3, 0, gameHeight/2);
+        arrowRight = new ArrowRight(2, 3, gameWidth - 3,gameHeight/2);
         runButton = new RunButton(3,3, gameWidth/2 - 2, 3);
         pet = new Pet(11, 15, gameWidth/2 - 11/2, midPointY - 15/2);
         toy = new Toy(4, 4, gameWidth/2 - 2, 9);

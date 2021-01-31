@@ -2,6 +2,7 @@ package com.myfyp.game.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -36,6 +37,7 @@ public class UpgradeScreen implements Screen {
     private StepCounterInterface stepCounter;
     PreferenceManager preferenceManager;
     private Image imageBackGround, imgUpgrade1, imgUpgrade2, imgUpgrade3;
+    private Music upgradeMusic;
 
 
     public UpgradeScreen(final Game game, final StepCounterInterface stepCounter){
@@ -52,6 +54,8 @@ public class UpgradeScreen implements Screen {
         imgUpgrade1 = new Image(AssetLoader.upgrade1);
         imgUpgrade2 = new Image(AssetLoader.upgrade2);
         imgUpgrade3 = new Image(AssetLoader.upgrade3);
+
+        musicInit();
 
         camera = new OrthographicCamera(gameWidthF, gameHeightF);
         camera.setToOrtho(false);
@@ -70,8 +74,7 @@ public class UpgradeScreen implements Screen {
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
         Label.LabelStyle label1Style = new Label.LabelStyle();
-        BitmapFont myFont = new BitmapFont(Gdx.files.internal("text.fnt"));
-        label1Style.font = myFont;
+        label1Style.font = new BitmapFont(Gdx.files.internal("text.fnt"));
 
         //data to string
         textUpgradeCount1 = Float.toString(DataClass.getUpgrade1Count());
@@ -97,8 +100,8 @@ public class UpgradeScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new GameScreen(game, stepCounter));
-
                 dispose();
+                upgradeMusic.dispose();
             }
         });
 
@@ -175,7 +178,7 @@ public class UpgradeScreen implements Screen {
         table.add(textCount1).right().colspan(2);
         table.row();
 
-        table.add(imgUpgrade2).maxSize(screenWidth/10, screenWidth/10);;
+        table.add(imgUpgrade2).maxSize(screenWidth/10, screenWidth/10);
         table.add(textUpgrade2).uniformX().getFillX();
         table.add(upgradeButton2).right().uniformX().getFillX();
         table.row();
@@ -183,7 +186,7 @@ public class UpgradeScreen implements Screen {
         table.add(textCount2).right().colspan(2);
         table.row();
 
-        table.add(imgUpgrade3).maxSize(screenWidth/10, screenWidth/10);;
+        table.add(imgUpgrade3).maxSize(screenWidth/10, screenWidth/10);
         table.add(textUpgrade3).uniformX().getFillX();
         table.add(upgradeButton3).right().uniformX().getFillX();
         table.row();
@@ -195,6 +198,7 @@ public class UpgradeScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
     }
+
 
     @Override
     public void render(float delta) {
@@ -225,6 +229,12 @@ public class UpgradeScreen implements Screen {
             upgradeButton3.setColor(Color.GOLD);
         }
 
+    }
+
+    private void musicInit(){
+        upgradeMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Magic-Clock-Shop_Looping.mp3"));
+        upgradeMusic.setLooping(true);
+        upgradeMusic.play();
     }
 
     @Override

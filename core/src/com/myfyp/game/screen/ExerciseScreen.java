@@ -2,6 +2,7 @@ package com.myfyp.game.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -36,6 +37,8 @@ public class ExerciseScreen implements Screen {
 
     private Image imageBackGround;
 
+    private Music runMusic;
+
     //Info about the screen size
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
@@ -62,6 +65,8 @@ public class ExerciseScreen implements Screen {
         stage = new Stage(viewport);
 
         imageBackGround = new Image(AssetLoader.background_play);
+
+        musicInit();
 
         table = new Table();
         table.setFillParent(true);
@@ -136,6 +141,7 @@ public class ExerciseScreen implements Screen {
                 task.cancel();
                 timer.cancel();
                 timer.purge();
+                runMusic.dispose();
                 dispose();
             }
         });
@@ -207,6 +213,12 @@ class TimerTaskApp extends TimerTask{
         }
     }
 }
+
+    private void musicInit(){
+        runMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Lost-Jungle_Looping.mp3"));
+        runMusic.setLooping(true);
+        runMusic.play();
+    }
 
     @Override
     public void show() {
