@@ -73,7 +73,7 @@ public class GameRenderer {
     private Coin coin;
     private Fun fun;
     private Happiness happiness;
-    public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageUpgradeButton, imageFood, imageCoin, imageFun, imageHappiness;
+    public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageUpgradeButton, imageFood, imageCoin, imageFun, imageHappiness, imageExit;
     private Music menuMusic;
     private Sound woofSound;
 
@@ -115,6 +115,7 @@ public class GameRenderer {
         //Place elements on screen
         placeArrow();
         placePet();
+        placeExit();
         placeUpgradeButton();
         placeResources();
         addStepCount();
@@ -169,6 +170,7 @@ public class GameRenderer {
         imageCoin = new Image(AssetLoader.coin);
         imageFun = new Image(AssetLoader.fun);
         imageHappiness = new Image(AssetLoader.happiness);
+        imageExit = new Image(AssetLoader.exit);
     }
 
     private void musicInit(){
@@ -258,6 +260,20 @@ public class GameRenderer {
         imagePet.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
                 DataClass.setMONEY(DataClass.getMONEY() + 1);
+            }
+        });
+    }
+
+    private void placeExit(){
+        imageExit.setPosition(coin.getX() + 16, coin.getY() -2);
+        imageExit.setWidth(3);
+        imageExit.setHeight(3);
+        stage.addActor(imageExit);
+
+        imageExit.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+                System.exit(0);
             }
         });
     }
