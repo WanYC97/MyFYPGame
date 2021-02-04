@@ -479,8 +479,6 @@ public class GameRenderer {
         shapeRenderer.rect(pet.getBoundingRectangle().x, pet.getBoundingRectangle().y, pet.getX(),pet.getY());
         shapeRenderer.end();
 
-        System.out.println(preferenceManager.getFloatValue("UPGRADE2"));
-
         batcher.begin();
         batcher.draw(background, 0, 0, gameWidth, gameHeight);
 

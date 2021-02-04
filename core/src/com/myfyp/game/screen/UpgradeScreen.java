@@ -106,9 +106,6 @@ public class UpgradeScreen implements Screen {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                preferenceManager.setFloatValue("UPGRADE1", DataClass.getUpgrade1Count());
-                preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade2Count());
-                preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade3Count());
                 game.setScreen(new GameScreen(game, stepCounter));
                 dispose();
                 upgradeMusic.dispose();
