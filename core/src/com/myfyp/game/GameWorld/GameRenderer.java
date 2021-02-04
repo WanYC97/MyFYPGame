@@ -45,6 +45,7 @@ import GameObjects.Pet;
 import GameObjects.RunButton;
 import GameObjects.Toy;
 
+import static com.myfyp.game.MyFypGame.preferenceManager;
 import static com.myfyp.game.helper.AssetLoader.background;
 import static com.myfyp.game.helper.AssetLoader.dispose;
 
@@ -76,6 +77,7 @@ public class GameRenderer {
     public Image imageBackGround, imagePet, imageBall, a_left, a_right, imageUpgradeButton, imageFood, imageCoin, imageFun, imageHappiness, imageExit;
     private Music menuMusic;
     private Sound woofSound;
+    //PreferenceManager preferenceManager;
 
     private float fallCheck = DataClass.getStepCount();
     private float moneyCheck = DataClass.getMONEY();
@@ -196,7 +198,6 @@ public class GameRenderer {
         //if hit barrier, mov   e down
     }
 
-
     private void addStepCount(){
         numberCoin = new BitmapFont(Gdx.files.internal("text.fnt"));
         numberSteps = new BitmapFont(Gdx.files.internal("text.fnt"));
@@ -272,6 +273,12 @@ public class GameRenderer {
 
         imageExit.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
+                preferenceManager.setFloatValue("STEP_COUNT", DataClass.getStepCount());
+                preferenceManager.setFloatValue("STEP_COUNT", DataClass.getLastCount());
+                preferenceManager.setFloatValue("MONEY", DataClass.getMONEY());
+                preferenceManager.setIntValue("REWARDS", DataClass.getREWARDS());
+                preferenceManager.setIntValue("AFFINITY", DataClass.getAFFINITY());
+
                 Gdx.app.exit();
                 System.exit(0);
             }
@@ -472,6 +479,8 @@ public class GameRenderer {
         shapeRenderer.rect(pet.getBoundingRectangle().x, pet.getBoundingRectangle().y, pet.getX(),pet.getY());
         shapeRenderer.end();
 
+        System.out.println(preferenceManager.getFloatValue("UPGRADE2"));
+
         batcher.begin();
         batcher.draw(background, 0, 0, gameWidth, gameHeight);
 
@@ -503,6 +512,10 @@ public class GameRenderer {
         labelFood.getData().setScale(f,f);
 
 
+        addFallingObject();
+        renderFall();
+        removeFallingObject();
+
         //PRINT STEP COUNT,  MONEY
         numberCoin.draw(batcher, Integer.toString((int)DataClass.getMONEY()), coin.getX() +4, coin.getY() +1);
         numberSteps.draw(batcher, Integer.toString((int)DataClass.getStepCount()), fun.getX() +4, fun.getY() +1);
@@ -516,18 +529,10 @@ public class GameRenderer {
 
         }
 
-
         if(myVar == ScreenNo.THIRD_SCREEN){
             //food screen
             labelBall.draw(batcher, "PLAY", imageBall.getX(), imageBall.getY() -1);
         }
-
-
-
-        addFallingObject();
-        renderFall();
-        removeFallingObject();
-        playAnimation();
 
         batcher.end();
         stage.act();

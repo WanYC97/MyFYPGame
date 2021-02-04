@@ -13,7 +13,7 @@ import javax.xml.crypto.Data;
 public class MyFypGame extends Game {
 	private Game game;
 	private final StepCounterInterface stepCounter;
-	PreferenceManager preferenceManager;
+	public static PreferenceManager preferenceManager;
 
 	public MyFypGame(StepCounterInterface stepCounter){
 		game = this;
@@ -43,15 +43,6 @@ public class MyFypGame extends Game {
 
 	@Override
 	public void dispose () {
-		//SAVE DATA
-		preferenceManager.setFloatValue("UPGRADE1", DataClass.getUpgrade1Count());
-		preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade2Count());
-		preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade3Count());
-		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getStepCount());
-		preferenceManager.setFloatValue("STEP_COUNT", DataClass.getLastCount());
-		preferenceManager.setFloatValue("MONEY", DataClass.getMONEY());
-		preferenceManager.setIntValue("REWARDS", DataClass.getREWARDS());
-		preferenceManager.setIntValue("AFFINITY", DataClass.getAFFINITY());
 		super.dispose();
 	}
 

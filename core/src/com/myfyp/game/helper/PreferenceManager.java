@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public class PreferenceManager {
-    private static Preferences preferences;
+    private Preferences preferences;
 
     public PreferenceManager() {
         preferences = Gdx.app.getPreferences("GamePreferences");

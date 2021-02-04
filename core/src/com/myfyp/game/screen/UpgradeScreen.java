@@ -22,6 +22,10 @@ import com.myfyp.game.helper.DataClass;
 import com.myfyp.game.helper.PreferenceManager;
 import com.myfyp.game.helper.StepCounterInterface;
 
+import javax.xml.crypto.Data;
+
+import static com.myfyp.game.MyFypGame.preferenceManager;
+
 public class UpgradeScreen implements Screen {
 
     int runTime;
@@ -31,11 +35,10 @@ public class UpgradeScreen implements Screen {
     private Viewport viewport;
     private Table table;
 
-    private Label textUpgrade1, textUpgrade2,textUpgrade3, textCount1, textCount2, textCount3;
+    private Label textUpgrade1, textUpgrade2,textUpgrade3, textCount1, textCount2, textCount3, textPrice1, textPrice2, textPrice3;
     private String textUpgradeCount1, textUpgradePrice1, textUpgradeCount2, textUpgradePrice2, textUpgradeCount3, textUpgradePrice3;
     private TextButton upgradeButton1, upgradeButton2,upgradeButton3, backButton;
     private StepCounterInterface stepCounter;
-    PreferenceManager preferenceManager;
     private Image imageBackGround, imgUpgrade1, imgUpgrade2, imgUpgrade3;
     private Music upgradeMusic;
 
@@ -88,6 +91,10 @@ public class UpgradeScreen implements Screen {
         upgradeButton2 = new TextButton("BUY", skin);
         upgradeButton3 = new TextButton("BUY", skin);
         backButton = new TextButton("Back", skin);
+        textPrice1 = new Label("Price: " + DataClass.getPRICE1(), label1Style);
+        textPrice2 = new Label("Price: " + DataClass.getPRICE2(), label1Style);
+        textPrice3 = new Label("Price: " + DataClass.getPRICE3(), label1Style);
+
         textUpgrade1 = new Label("UPGRADE 1",label1Style);
         textCount1 = new Label("Count: " + DataClass.getUpgrade1Count(), label1Style);
         textUpgrade2 = new Label("UPGRADE 2",label1Style);
@@ -99,6 +106,9 @@ public class UpgradeScreen implements Screen {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                preferenceManager.setFloatValue("UPGRADE1", DataClass.getUpgrade1Count());
+                preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade2Count());
+                preferenceManager.setFloatValue("UPGRADE2", DataClass.getUpgrade3Count());
                 game.setScreen(new GameScreen(game, stepCounter));
                 dispose();
                 upgradeMusic.dispose();
@@ -175,6 +185,9 @@ public class UpgradeScreen implements Screen {
         table.add(upgradeButton1).right().uniformX().getFillX();
         table.row();
 
+        table.add(textPrice1).right().colspan(2);
+        table.row();
+
         table.add(textCount1).right().colspan(2);
         table.row();
 
@@ -183,12 +196,18 @@ public class UpgradeScreen implements Screen {
         table.add(upgradeButton2).right().uniformX().getFillX();
         table.row();
 
+        table.add(textPrice2).right().colspan(2);
+        table.row();
+
         table.add(textCount2).right().colspan(2);
         table.row();
 
         table.add(imgUpgrade3).maxSize(screenWidth/10, screenWidth/10);
         table.add(textUpgrade3).uniformX().getFillX();
         table.add(upgradeButton3).right().uniformX().getFillX();
+        table.row();
+
+        table.add(textPrice3).right().colspan(2);
         table.row();
 
         table.add(textCount3).right().colspan(2);
